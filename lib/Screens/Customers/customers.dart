@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,12 +13,40 @@ class Customers extends StatefulWidget {
 
 class _CustomersState extends State<Customers> {
 
-  final _name = TextEditingController(),
-      _presentAddress = TextEditingController(),
-      _permanentAddress = TextEditingController(),
-      _phone = TextEditingController(),
-      _email = TextEditingController(),
-      _due = TextEditingController();
+  final _name = TextEditingController();
+  final _presentAddress = TextEditingController();
+  final _permanentAddress = TextEditingController();
+  final _phone = TextEditingController();
+  final _email = TextEditingController();
+  final _due = TextEditingController();
+
+  Future<void> _uploadCustomerDetails() async {
+    try {
+      await FirebaseFirestore.instance.collection('customers').add({
+        'name': _name.text,
+        'presentAddress': _presentAddress.text,
+        'permanentAddress': _permanentAddress.text,
+        'phone': _phone.text,
+        'email': _email.text,
+        'due': 0.0,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Customer details updated'),
+        ),
+      );
+      
+      _name.clear();
+      _presentAddress.clear();
+      _permanentAddress.clear();
+      _phone.clear();
+      _email.clear();
+      _due.clear();
+    } catch (e) {
+      print('Error uploading customer details: $e');
+    }
+  }
 
 
   @override
@@ -516,7 +545,7 @@ class _CustomersState extends State<Customers> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-
+                            _uploadCustomerDetails();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF1E2772),

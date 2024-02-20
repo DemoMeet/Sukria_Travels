@@ -41,6 +41,7 @@ dependencies:
   get: ^4.6.1
   page_transition: ^2.0.9
   firebase_core: ^2.25.4
+  cloud_firestore: ^4.15.5
 
 
 dev_dependencies:
