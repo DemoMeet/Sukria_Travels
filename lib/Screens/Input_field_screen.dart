@@ -1,6 +1,8 @@
 import 'package:customer_management/modeel.dart';
+import 'package:customer_management/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:customer_management/pdf_helper.dart';
+import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart';
@@ -39,13 +41,13 @@ class InputFieldScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MediaQuery.of(context).size.width >850? Image.asset(
+            MediaQuery.of(context).size.width >915? Image.asset(
               'assets/logo.jpg',
               width: 400,
               fit: BoxFit.contain,
               height: 160,
             )
-                : MediaQuery.of(context).size.width >747? Image.asset(
+                : MediaQuery.of(context).size.width >836? Image.asset(
               'assets/logo.jpg',
               width: _width/2.5,
               fit: BoxFit.contain,
@@ -57,13 +59,27 @@ class InputFieldScreen extends StatelessWidget {
               height:160,
             ),
 
-            MediaQuery.of(context).size.width >586? Row(
+            MediaQuery.of(context).size.width >671? Row(
               children: [
-
-                GestureDetector(
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(homePageRoute);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Home",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                InkWell(
                 onTap: () {
-                  // Handle onTap event for the option
-                  // print("Tapped on $title");
+                  Get.toNamed(customers);
                 },
                 child: Container(
                   padding: EdgeInsets.all(8),
@@ -79,9 +95,9 @@ class InputFieldScreen extends StatelessWidget {
 
 
                 SizedBox(width: 10),
-                GestureDetector(
+                InkWell(
                   onTap: () {
-
+                    Get.toNamed(customersList);
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -95,9 +111,9 @@ class InputFieldScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 10),
-                GestureDetector(
+                InkWell(
                   onTap: () {
-
+                    Get.toNamed(invoice);
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -111,9 +127,9 @@ class InputFieldScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 10),
-                GestureDetector(
+                InkWell(
                   onTap: () {
-
+                    Get.toNamed(invoiceList);
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
@@ -132,10 +148,25 @@ class InputFieldScreen extends StatelessWidget {
             )
             : Row(
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: () {
-                    // Handle onTap event for the option
-                    // print("Tapped on $title");
+                    Get.toNamed(homePageRoute);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Home",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(customers);
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
@@ -151,9 +182,9 @@ class InputFieldScreen extends StatelessWidget {
 
 
                 SizedBox(width: 8),
-                GestureDetector(
+                InkWell(
                   onTap: () {
-
+                    Get.toNamed(customersList);
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
@@ -167,9 +198,9 @@ class InputFieldScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8),
-                GestureDetector(
+                InkWell(
                   onTap: () {
-
+                    Get.toNamed(invoice);
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
@@ -183,9 +214,9 @@ class InputFieldScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8),
-                GestureDetector(
+                InkWell(
                   onTap: () {
-
+                    Get.toNamed(invoiceList);
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
