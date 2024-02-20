@@ -47,7 +47,7 @@ class InputFieldScreen extends StatelessWidget {
               fit: BoxFit.contain,
               height: 160,
             )
-                : MediaQuery.of(context).size.width >836? Image.asset(
+                : MediaQuery.of(context).size.width >852? Image.asset(
               'assets/logo.jpg',
               width: _width/2.5,
               fit: BoxFit.contain,
@@ -163,7 +163,7 @@ class InputFieldScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 5),
                 InkWell(
                   onTap: () {
                     Get.toNamed(customers);
@@ -181,7 +181,7 @@ class InputFieldScreen extends StatelessWidget {
                 ),
 
 
-                SizedBox(width: 8),
+                SizedBox(width: 5),
                 InkWell(
                   onTap: () {
                     Get.toNamed(customersList);
@@ -197,7 +197,7 @@ class InputFieldScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 5),
                 InkWell(
                   onTap: () {
                     Get.toNamed(invoice);
@@ -213,7 +213,7 @@ class InputFieldScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 5),
                 InkWell(
                   onTap: () {
                     Get.toNamed(invoiceList);
@@ -229,7 +229,7 @@ class InputFieldScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 2),
+                SizedBox(width: 0),
 
               ],
             ),
