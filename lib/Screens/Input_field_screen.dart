@@ -72,6 +72,7 @@ class InputFieldScreen extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -159,6 +160,7 @@ class InputFieldScreen extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),

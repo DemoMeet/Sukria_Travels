@@ -4,18 +4,30 @@ import 'package:customer_management/Screens/Customers/customersList.dart';
 import 'package:customer_management/Screens/Invoices/InvoiceList.dart';
 import 'package:customer_management/Screens/Invoices/invoice.dart';
 import 'package:customer_management/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:customer_management/Screens/Input_field_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+Future<void> main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyAaQdp5ZCnTXU6ToRIvdyU858AFN4L1qM8",
+        authDomain: "shukriyatravels.firebaseapp.com",
+        projectId: "shukriyatravels",
+        storageBucket: "shukriyatravels.appspot.com",
+        messagingSenderId: "818328042604",
+        appId: "1:818328042604:web:8c8900389b3a4ddd3a6c49",
+        measurementId: "G-H70J6S5LH4"
+    )
+  );
+
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
