@@ -1,4 +1,4 @@
-import 'package:customer_management/Input_field_screen.dart';
+import 'package:customer_management/Screens/Input_field_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

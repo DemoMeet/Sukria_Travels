@@ -35,14 +35,176 @@ class InputFieldScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          title: Image.asset(
-            'assets/logo.jpg',
-            width: 400,
-            fit: BoxFit.contain,
-            height: 160,
-          ),
-          centerTitle: true,
-          toolbarHeight: 100),
+        toolbarHeight: 100,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            MediaQuery.of(context).size.width >850? Image.asset(
+              'assets/logo.jpg',
+              width: 400,
+              fit: BoxFit.contain,
+              height: 160,
+            )
+                : MediaQuery.of(context).size.width >747? Image.asset(
+              'assets/logo.jpg',
+              width: _width/2.5,
+              fit: BoxFit.contain,
+              height:160,
+            ): Image.asset(
+              'assets/logo.jpg',
+              width: _width/4,
+              fit: BoxFit.contain,
+              height:160,
+            ),
+
+            MediaQuery.of(context).size.width >586? Row(
+              children: [
+
+                GestureDetector(
+                onTap: () {
+                  // Handle onTap event for the option
+                  // print("Tapped on $title");
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Customers",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Customers List",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Invoice",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Invoice list",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+
+              ],
+            )
+            : Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    // Handle onTap event for the option
+                    // print("Tapped on $title");
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Customers",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Customers List",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Invoice",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Invoice list",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2),
+
+              ],
+            ),
+          ],
+        ),
+      ),
       body: Container(
         margin: EdgeInsets.only(top: 10, left: 30),
         child: SingleChildScrollView(
