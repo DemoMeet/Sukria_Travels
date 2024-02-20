@@ -37,6 +37,7 @@ class InputFieldScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 100,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
