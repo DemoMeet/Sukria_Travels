@@ -6,7 +6,7 @@ import '../../routes.dart';
 import '../../widgets/customer_model.dart';
 
 class CustomerDetails extends StatefulWidget {
-  final customerModel customer; 
+  final customerModel customer;
 
   const CustomerDetails({Key? key, required this.customer}) : super(key: key);
 
