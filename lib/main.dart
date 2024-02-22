@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:customer_management/Screens/Customers/customers.dart';
 import 'package:customer_management/Screens/Customers/customersList.dart';
 import 'package:customer_management/Screens/Invoices/InvoiceList.dart';
-import 'package:customer_management/Screens/Invoices/invoice.dart';
 import 'package:customer_management/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:page_transition/page_transition.dart';
@@ -38,12 +37,20 @@ class MyApp extends StatelessWidget {
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse},
       ),
-      initialRoute: homePageRoute,
+      initialRoute: invoice,
 
       getPages: [
+        // GetPage(
+        //     name: homePageRoute,
+        //     page: () => InputFieldScreen(),
+        // ),
         GetPage(
-            name: homePageRoute,
-            page: () => InputFieldScreen(),
+          name: invoice,
+          page: () => InputFieldScreen(),
+        ),
+        GetPage(
+          name: invoiceList,
+          page: () => InvoiceList(),
         ),
         GetPage(
           name: customers,
@@ -53,14 +60,7 @@ class MyApp extends StatelessWidget {
           name: customersList,
           page: () => CustomerList(),
         ),
-        GetPage(
-          name: invoice,
-          page: () => Invoice(),
-        ),
-        GetPage(
-          name: invoiceList,
-          page: () => InvoiceList(),
-        ),
+
 
       ],
 

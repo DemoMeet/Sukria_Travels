@@ -83,58 +83,6 @@ class _CustomersState extends State<Customers> {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.toNamed(homePageRoute);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Home",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        //fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(customers);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      "Customers",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-
-
-                SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(customersList);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      "Customers List",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
                     Get.toNamed(invoice);
                   },
                   child: Container(
@@ -165,39 +113,18 @@ class _CustomersState extends State<Customers> {
                   ),
                 ),
                 SizedBox(width: 10),
-
-              ],
-            )
-                : Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(homePageRoute);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Home",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5),
+                SizedBox(width: 10),
                 InkWell(
                   onTap: () {
                     Get.toNamed(customers);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(8),
                     child: Text(
                       "Customers",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -205,23 +132,29 @@ class _CustomersState extends State<Customers> {
                 ),
 
 
-                SizedBox(width: 5),
+                SizedBox(width: 10),
                 InkWell(
                   onTap: () {
                     Get.toNamed(customersList);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(8),
                     child: Text(
                       "Customers List",
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 12,
+                        fontSize: 16,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 5),
+                SizedBox(width: 10),
+
+
+              ],
+            )
+                : Row(
+              children: [
                 InkWell(
                   onTap: () {
                     Get.toNamed(invoice);
@@ -254,6 +187,43 @@ class _CustomersState extends State<Customers> {
                   ),
                 ),
                 SizedBox(width: 0),
+                SizedBox(width: 5),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(customers);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Customers",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                SizedBox(width: 5),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(customersList);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Customers List",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5),
+
 
               ],
             ),

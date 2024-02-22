@@ -65,12 +65,12 @@ class InputFieldScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.toNamed(homePageRoute);
+                    Get.toNamed(invoice);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(8),
                     child: Text(
-                      "Home",
+                      "Invoice",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -79,6 +79,23 @@ class InputFieldScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(invoiceList);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Invoice list",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
                 SizedBox(width: 10),
                 InkWell(
                 onTap: () {
@@ -114,38 +131,7 @@ class InputFieldScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(invoice);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      "Invoice",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(invoiceList);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Text(
-                      "Invoice list",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
+
 
               ],
             )
@@ -153,12 +139,28 @@ class InputFieldScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.toNamed(homePageRoute);
+                    Get.toNamed(invoice);
                   },
                   child: Container(
                     padding: EdgeInsets.all(5),
                     child: Text(
-                      "Home",
+                      "Invoice",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5),
+                InkWell(
+                  onTap: () {
+                    Get.toNamed(invoiceList);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      "Invoice list",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
@@ -167,6 +169,7 @@ class InputFieldScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(width: 0),
                 SizedBox(width: 5),
                 InkWell(
                   onTap: () {
@@ -202,38 +205,7 @@ class InputFieldScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 5),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(invoice);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Invoice",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 5),
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(invoiceList);
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Text(
-                      "Invoice list",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 0),
+
 
               ],
             ),
