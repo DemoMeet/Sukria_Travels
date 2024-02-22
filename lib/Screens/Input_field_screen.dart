@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer_management/modeel.dart';
 import 'package:customer_management/routes.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart';
+
+import '../widgets/customer_model.dart';
 
 class InputFieldScreen extends StatelessWidget {
   const InputFieldScreen({super.key});
@@ -34,6 +37,11 @@ class InputFieldScreen extends StatelessWidget {
         _arrivaldate16 = TextEditingController(),
         _basefare17 = TextEditingController(),
         _taxes18 = TextEditingController();
+
+    final _due19 = TextEditingController();
+    // String _selectedCustomer? = TextEditingController();
+    // String? _selectedCustomer;
+    customerModel? _selectedCustomer;
 
     return Scaffold(
       appBar: AppBar(
@@ -996,6 +1004,127 @@ class InputFieldScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
+
+                Container(
+                  margin:
+                  EdgeInsets.only(top: _height / 25, left: 10, right: 10),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          "Due",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 1,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          "Customer name",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: TextFormField(
+                          controller: _due19,
+                          decoration: InputDecoration(
+                            hintText: "Due",
+                            fillColor: Colors.grey[200],
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.blue),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 1,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance.collection('customers').snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              List<customerModel> customerList = [];
+                              for (var doc in snapshot.data!.docs) {
+                                customerList.add(customerModel(
+                                  id: doc.id,
+                                  name: doc['name'],
+                                  email: doc['email'],
+                                  permanentAddress: doc['permanentAddress'],
+                                  presentAddress: doc['presentAddress'],
+                                  phone: doc['phone'],
+                                  due: doc['due'],
+                                ));
+                              }
+                              return DropdownButtonFormField<customerModel>(
+                                value: _selectedCustomer,
+                                items: customerList.map((customer) {
+                                  return DropdownMenuItem<customerModel>(
+                                    value: customer,
+                                    child: Text(customer.name!),
+                                  );
+                                }).toList(),
+                                onChanged: (customerModel? value) {
+
+                                    _selectedCustomer = value;
+
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Select Customer',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    borderSide: BorderSide(color: Colors.transparent),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
+
+
                 Container(
                   margin:
                       EdgeInsets.only(top: _height / 25, left: 10, right: 10),

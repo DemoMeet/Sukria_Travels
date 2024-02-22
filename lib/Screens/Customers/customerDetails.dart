@@ -3,11 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import '../../routes.dart';
+import '../../widgets/customer_model.dart';
 
 class CustomerDetails extends StatefulWidget {
-  final DocumentSnapshot customer;
+  final customerModel customer; 
 
-  CustomerDetails({required this.customer});
+  const CustomerDetails({Key? key, required this.customer}) : super(key: key);
 
   @override
   _CustomerDetailsState createState() => _CustomerDetailsState();
@@ -24,16 +25,14 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.customer['name']);
-    _emailController = TextEditingController(text: widget.customer['email']);
-    _presentAddressController =
-        TextEditingController(text: widget.customer['presentAddress']);
-    _permanentAddressController =
-        TextEditingController(text: widget.customer['permanentAddress']);
-    _phoneController = TextEditingController(text: widget.customer['phone']);
-    _dueController = TextEditingController(
-        text: widget.customer['due'].toStringAsFixed(2));
+    _nameController = TextEditingController(text: widget.customer.name);
+    _emailController = TextEditingController(text: widget.customer.email);
+    _presentAddressController = TextEditingController(text: widget.customer.presentAddress);
+    _permanentAddressController = TextEditingController(text: widget.customer.permanentAddress);
+    _phoneController = TextEditingController(text: widget.customer.phone);
+    _dueController = TextEditingController(text: widget.customer.due?.toStringAsFixed(2));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -611,7 +610,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
     );
   }
 
-  Future<void> _updateCustomerDetails() async {
+  void _updateCustomerDetails() async {
     try {
       await FirebaseFirestore.instance
           .collection('customers')

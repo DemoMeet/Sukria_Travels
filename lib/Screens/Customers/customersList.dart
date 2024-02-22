@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer_management/Screens/Customers/customerDetails.dart';
+import 'package:customer_management/widgets/customer_model.dart'; // Importing customerModel
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,25 +43,28 @@ class _CustomerListState extends State<CustomerList> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MediaQuery.of(context).size.width >915? Image.asset(
+            MediaQuery.of(context).size.width > 915
+                ? Image.asset(
               'assets/logo.jpg',
               width: 400,
               fit: BoxFit.contain,
               height: 160,
             )
-                : MediaQuery.of(context).size.width >852? Image.asset(
+                : MediaQuery.of(context).size.width > 852
+                ? Image.asset(
               'assets/logo.jpg',
-              width: _width/2.5,
+              width: _width / 2.5,
               fit: BoxFit.contain,
-              height:160,
-            ): Image.asset(
+              height: 160,
+            )
+                : Image.asset(
               'assets/logo.jpg',
-              width: _width/4,
+              width: _width / 4,
               fit: BoxFit.contain,
-              height:160,
+              height: 160,
             ),
-
-            MediaQuery.of(context).size.width >671? Row(
+            MediaQuery.of(context).size.width > 671
+                ? Row(
               children: [
                 InkWell(
                   onTap: () {
@@ -110,8 +114,6 @@ class _CustomerListState extends State<CustomerList> {
                     ),
                   ),
                 ),
-
-
                 SizedBox(width: 10),
                 InkWell(
                   onTap: () {
@@ -130,8 +132,6 @@ class _CustomerListState extends State<CustomerList> {
                   ),
                 ),
                 SizedBox(width: 10),
-
-
               ],
             )
                 : Row(
@@ -184,8 +184,6 @@ class _CustomerListState extends State<CustomerList> {
                     ),
                   ),
                 ),
-
-
                 SizedBox(width: 5),
                 InkWell(
                   onTap: () {
@@ -204,8 +202,6 @@ class _CustomerListState extends State<CustomerList> {
                   ),
                 ),
                 SizedBox(width: 5),
-
-
               ],
             ),
           ],
@@ -224,20 +220,17 @@ class _CustomerListState extends State<CustomerList> {
                     "Customers List",
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(width: _width / 4,),
+                  SizedBox(width: _width / 4),
                   Expanded(
                     child: TextFormField(
-
                       controller: _searchController,
                       decoration: InputDecoration(
                         enabledBorder: const OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                         focusedBorder: const OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
                           borderSide: BorderSide(color: Colors.blue),
                         ),
                         hintText: "Search...",
@@ -245,9 +238,7 @@ class _CustomerListState extends State<CustomerList> {
                         filled: true,
                       ),
                       onChanged: (value) {
-                        setState(() {
-
-                        });
+                        setState(() {});
                       },
                     ),
                   ),
@@ -258,9 +249,9 @@ class _CustomerListState extends State<CustomerList> {
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
-                child: StreamBuilder(
+                child: StreamBuilder<QuerySnapshot>(
                   stream: _customerStream,
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else {
@@ -280,39 +271,50 @@ class _CustomerListState extends State<CustomerList> {
                           );
                         } else {
                           // Filtering logic based on search input
-                          var filteredCustomers = snapshot.data!.docs.where((customer) {
+                          var filteredCustomers = snapshot.data!.docs
+                              .where((customer) {
                             String name = customer['name'].toString().toLowerCase();
                             String searchTerm = _searchController.text.toLowerCase();
                             return name.contains(searchTerm);
-                          }).toList();
+                          })
+                              .map((doc) => customerModel(
+                            id: doc.id,
+                            name: doc['name'],
+                            email: doc['email'],
+                            permanentAddress: doc['permanentAddress'],
+                            presentAddress: doc['presentAddress'],
+                            phone: doc['phone'],
+                            due: doc['due'],
+                          ))
+                              .toList();
 
                           return ListView.separated(
                             itemCount: filteredCustomers.length,
                             separatorBuilder: (context, index) => SizedBox(height: 10),
                             itemBuilder: (context, index) {
-                              DocumentSnapshot customer = filteredCustomers[index];
+                              customerModel customer = filteredCustomers[index];
                               return ListTile(
                                 title: Row(
                                   children: [
-                                    Icon(Icons.person, size: 16,),
-                                    SizedBox(width: 5,),
+                                    Icon(Icons.person, size: 16),
+                                    SizedBox(width: 5),
                                     Text(
-                                      customer['name'],
+                                      customer.name!,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
                                     ),
                                     Spacer(),
-                                    Text("Due: ${customer['due']}"),
+                                    Text("Due: ${customer.due}"),
                                   ],
                                 ),
                                 subtitle: Row(
                                   children: [
-                                    Icon(Icons.phone, size: 16,),
-                                    SizedBox(width: 5,),
+                                    Icon(Icons.phone, size: 16),
+                                    SizedBox(width: 5),
                                     Text(
-                                      customer['phone'],
+                                      customer.phone!,
                                       style: TextStyle(
                                         color: Colors.grey,
                                       ),
