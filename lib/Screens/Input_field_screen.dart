@@ -37,6 +37,7 @@ class InputFieldScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
         title: Row(

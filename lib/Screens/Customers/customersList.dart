@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customer_management/Screens/Customers/customerDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +20,7 @@ class _CustomerListState extends State<CustomerList> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
         title: Row(
@@ -222,11 +225,81 @@ class _CustomerListState extends State<CustomerList> {
           ],
         ),
       ),
-      body: Center(
-        child: Text(
-            "Customer list section will update soon!"
+      body: Container(
+        margin: EdgeInsets.only(top: 10, left: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
+              child: const Text(
+                "Customers List",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance.collection('customers').snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return ListView.separated(
+                          itemCount: snapshot.data!.docs.length,
+                          separatorBuilder: (context, index) => SizedBox(height: 10),
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot customer = snapshot.data!.docs[index];
+                            return ListTile(
+                              title: Row(
+                                children: [
+                                  Icon(Icons.person, size: 16,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                      customer['name'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Text("Due: ${customer['due']}"),
+                                ],
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Icon(Icons.phone, size: 16,),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                      customer['phone'],
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Get.to(CustomerDetails(customer: customer));
+                              },
+                            );
+                          },
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+            ),
+
+          ],
         ),
       ),
+
     );
   }
 }

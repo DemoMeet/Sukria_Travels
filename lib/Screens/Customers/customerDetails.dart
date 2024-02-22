@@ -1,58 +1,46 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import '../../routes.dart';
 
-class Customers extends StatefulWidget {
-  const Customers({Key? key}) : super(key: key);
+class CustomerDetails extends StatefulWidget {
+  final DocumentSnapshot customer;
+
+  CustomerDetails({required this.customer});
 
   @override
-  State<Customers> createState() => _CustomersState();
+  _CustomerDetailsState createState() => _CustomerDetailsState();
 }
 
-class _CustomersState extends State<Customers> {
+class _CustomerDetailsState extends State<CustomerDetails> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _presentAddressController;
+  late TextEditingController _permanentAddressController;
+  late TextEditingController _phoneController;
+  late TextEditingController _dueController;
 
-  final _name = TextEditingController();
-  final _presentAddress = TextEditingController();
-  final _permanentAddress = TextEditingController();
-  final _phone = TextEditingController();
-  final _email = TextEditingController();
-  final _due = TextEditingController();
-
-  Future<void> _uploadCustomerDetails() async {
-    try {
-      await FirebaseFirestore.instance.collection('customers').add({
-        'name': _name.text,
-        'presentAddress': _presentAddress.text,
-        'permanentAddress': _permanentAddress.text,
-        'phone': _phone.text,
-        'email': _email.text,
-        'due': 0.0,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Customer details updated'),
-        ),
-      );
-
-      _name.clear();
-      _presentAddress.clear();
-      _permanentAddress.clear();
-      _phone.clear();
-      _email.clear();
-      _due.clear();
-    } catch (e) {
-      print('Error uploading customer details: $e');
-    }
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.customer['name']);
+    _emailController = TextEditingController(text: widget.customer['email']);
+    _presentAddressController =
+        TextEditingController(text: widget.customer['presentAddress']);
+    _permanentAddressController =
+        TextEditingController(text: widget.customer['permanentAddress']);
+    _phoneController = TextEditingController(text: widget.customer['phone']);
+    _dueController = TextEditingController(
+        text: widget.customer['due'].toStringAsFixed(2));
   }
-
 
   @override
   Widget build(BuildContext context) {
+
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -92,7 +80,7 @@ class _CustomersState extends State<Customers> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        //fontWeight: FontWeight.bold,
+
                       ),
                     ),
                   ),
@@ -109,7 +97,6 @@ class _CustomersState extends State<Customers> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -128,6 +115,7 @@ class _CustomersState extends State<Customers> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -181,7 +169,7 @@ class _CustomersState extends State<Customers> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
-                        // fontWeight: FontWeight.bold,
+
                       ),
                     ),
                   ),
@@ -198,7 +186,6 @@ class _CustomersState extends State<Customers> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -217,6 +204,7 @@ class _CustomersState extends State<Customers> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -261,7 +249,6 @@ class _CustomersState extends State<Customers> {
         ),
       ),
 
-
       body: Container(
         margin: EdgeInsets.only(top: 10, left: 30),
         child: SingleChildScrollView(
@@ -272,7 +259,7 @@ class _CustomersState extends State<Customers> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Add Customer details",
+                  "Edit Customer details",
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
                 Container(
@@ -312,7 +299,7 @@ class _CustomersState extends State<Customers> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _name,
+                          controller: _nameController,
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
@@ -339,7 +326,7 @@ class _CustomersState extends State<Customers> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _email,
+                          controller: _emailController,
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
@@ -397,7 +384,7 @@ class _CustomersState extends State<Customers> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _presentAddress,
+                          controller: _presentAddressController,
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
@@ -424,7 +411,7 @@ class _CustomersState extends State<Customers> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _permanentAddress,
+                          controller: _permanentAddressController,
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
@@ -482,7 +469,7 @@ class _CustomersState extends State<Customers> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _phone,
+                          controller: _phoneController,
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
@@ -509,7 +496,7 @@ class _CustomersState extends State<Customers> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _due,
+                          controller: _dueController,
                           decoration: InputDecoration(
 
                             enabledBorder: const OutlineInputBorder(
@@ -546,7 +533,7 @@ class _CustomersState extends State<Customers> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            _uploadCustomerDetails();
+                            _updateCustomerDetails();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF1E2772),
@@ -554,7 +541,7 @@ class _CustomersState extends State<Customers> {
                             padding: const EdgeInsets.symmetric(vertical: 20),
                           ),
                           child: const Text(
-                            "Submit",
+                            "Update",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -571,6 +558,126 @@ class _CustomersState extends State<Customers> {
           ),
         ),
       ),
+      // body: SingleChildScrollView(
+      //   child: Container(
+      //     margin: EdgeInsets.all(20),
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       children: [
+      //         Text(
+      //           "Customer Name",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         TextFormField(
+      //           controller: _nameController,
+      //           decoration: InputDecoration(
+      //             hintText: "Customer Name",
+      //           ),
+      //         ),
+      //         SizedBox(height: 20),
+      //         Text(
+      //           "Email Address",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         TextFormField(
+      //           controller: _emailController,
+      //           decoration: InputDecoration(
+      //             hintText: "Email Address",
+      //           ),
+      //         ),
+      //         SizedBox(height: 20),
+      //         Text(
+      //           "Present Address",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         TextFormField(
+      //           controller: _presentAddressController,
+      //           decoration: InputDecoration(
+      //             hintText: "Present Address",
+      //           ),
+      //         ),
+      //         SizedBox(height: 20),
+      //         Text(
+      //           "Permanent Address",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         TextFormField(
+      //           controller: _permanentAddressController,
+      //           decoration: InputDecoration(
+      //             hintText: "Permanent Address",
+      //           ),
+      //         ),
+      //         SizedBox(height: 20),
+      //         Text(
+      //           "Contact Number",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         TextFormField(
+      //           controller: _phoneController,
+      //           decoration: InputDecoration(
+      //             hintText: "Contact Number",
+      //           ),
+      //         ),
+      //         SizedBox(height: 20),
+      //         Text(
+      //           "Payment Due",
+      //           style: TextStyle(fontSize: 16),
+      //         ),
+      //         TextFormField(
+      //           controller: _dueController,
+      //           decoration: InputDecoration(
+      //             hintText: "Payment Due",
+      //           ),
+      //         ),
+      //         SizedBox(height: 20),
+      //         ElevatedButton(
+      //           onPressed: () {
+      //             _updateCustomerDetails();
+      //           },
+      //           child: Text('Update'),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
+  }
+
+  Future<void> _updateCustomerDetails() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('customers')
+          .doc(widget.customer.id)
+          .update({
+        'name': _nameController.text,
+        'email': _emailController.text,
+        'presentAddress': _presentAddressController.text,
+        'permanentAddress': _permanentAddressController.text,
+        'phone': _phoneController.text,
+        'due': double.parse(_dueController.text),
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Customer details updated successfully'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating customer details: $e'),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _presentAddressController.dispose();
+    _permanentAddressController.dispose();
+    _phoneController.dispose();
+    _dueController.dispose();
+    super.dispose();
   }
 }
