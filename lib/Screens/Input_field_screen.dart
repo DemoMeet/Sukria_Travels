@@ -1188,6 +1188,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                               borderSide: BorderSide(color: Colors.blue),
                             ),
                           ),
+                          readOnly: true,
                         ),
                       ),
                       const Expanded(
