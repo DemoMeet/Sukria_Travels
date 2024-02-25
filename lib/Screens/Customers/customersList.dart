@@ -326,7 +326,7 @@ class _CustomerListState extends State<CustomerList> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: Icon(Icons.visibility),
+                                      icon: Icon(Icons.attach_money),
                                       onPressed: () {
                                         // Navigate to view page
                                         Get.to(ViewCustomerPage(customer: customer));
