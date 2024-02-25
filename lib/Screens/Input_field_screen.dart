@@ -115,6 +115,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
     final _due19 = TextEditingController();
 
     customerModel? _selectedCustomer;
+    String? _travellerType;
 
     Future<void> _uploadInvoiceDetails(double total) async {
       try {
@@ -140,6 +141,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
           'due': _due19.text,
           'total': total,
           'selectedCustomer': _selectedCustomer?.toString(),
+          'travellerType': _travellerType?.toString(),
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -168,6 +170,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
         _basefare17.clear();
         _taxes18.clear();
         _due19.clear();
+
       } catch (e) {
         print('Error uploading customer details: $e');
       }
@@ -385,7 +388,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       Expanded(
                         flex: 10,
                         child: Text(
-                          "Traveller Name",
+                          "Traveller Type",
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -426,17 +429,88 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       ),
                       Expanded(
                         flex: 10,
+                        child: DropdownButtonFormField<String>(
+                          value: _travellerType,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _travellerType = newValue!;
+                            });
+                          },
+                          items: <String>['Pensioner', 'Adult', 'Youth', 'Children', 'Infant']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: InputDecoration(
+                            hintText: "Select",
+                            fillColor: Colors.grey[200],
+                            filled: true,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.blue),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
+                Container(
+                  margin:
+                  EdgeInsets.only(top: _height / 25, left: 10, right: 10),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          "Traveller Name",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 1,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: Text(
+                          "Customer Name",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      Expanded(
+                        flex: 10,
                         child: TextFormField(
                           controller: _travellername2,
                           decoration: InputDecoration(
                             enabledBorder: const OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
+                              BorderRadius.all(Radius.circular(5.0)),
                               borderSide: BorderSide(color: Colors.transparent),
                             ),
                             focusedBorder: const OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
+                              BorderRadius.all(Radius.circular(5.0)),
                               borderSide: BorderSide(color: Colors.blue),
                             ),
                             hintText: "Traveller Name",
@@ -444,10 +518,75 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                             filled: true,
                           ),
                         ),
-                      )
+                      ),
+
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: 1,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 10,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance.collection('customers').snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              List<customerModel> customerList = [];
+                              for (var doc in snapshot.data!.docs) {
+                                customerList.add(customerModel(
+                                  id: doc.id,
+                                  name: doc['name'],
+                                  email: doc['email'],
+                                  permanentAddress: doc['permanentAddress'],
+                                  presentAddress: doc['presentAddress'],
+                                  phone: doc['phone'],
+                                  due: doc['due'],
+                                ));
+                              }
+                              return DropdownButtonFormField<customerModel>(
+                                value: _selectedCustomer,
+                                items: customerList.map((customer) {
+                                  return DropdownMenuItem<customerModel>(
+                                    value: customer,
+                                    child: Text(customer.name!),
+                                  );
+                                }).toList(),
+                                onChanged: (customerModel? value) {
+
+                                  _selectedCustomer = value;
+                                  _due19.text = _selectedCustomer!.due.toString();
+
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Select Customer',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    borderSide: BorderSide(color: Colors.transparent),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+
                     ],
                   ),
                 ),
+
+
+
                 Container(
                   margin:
                       EdgeInsets.only(top: _height / 25, left: 10, right: 10),
@@ -1158,14 +1297,13 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       Expanded(
                         flex: 10,
                         child: Text(
-                          "Customer name",
+                          "",
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: Row(
@@ -1199,61 +1337,29 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       ),
                       Expanded(
                         flex: 10,
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance.collection('customers').snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              List<customerModel> customerList = [];
-                              for (var doc in snapshot.data!.docs) {
-                                customerList.add(customerModel(
-                                  id: doc.id,
-                                  name: doc['name'],
-                                  email: doc['email'],
-                                  permanentAddress: doc['permanentAddress'],
-                                  presentAddress: doc['presentAddress'],
-                                  phone: doc['phone'],
-                                  due: doc['due'],
-                                ));
-                              }
-                              return DropdownButtonFormField<customerModel>(
-                                value: _selectedCustomer,
-                                items: customerList.map((customer) {
-                                  return DropdownMenuItem<customerModel>(
-                                    value: customer,
-                                    child: Text(customer.name!),
-                                  );
-                                }).toList(),
-                                onChanged: (customerModel? value) {
-
-                                  _selectedCustomer = value;
-                                  _due19.text = _selectedCustomer!.due.toString();
-
-                                },
-                                decoration: InputDecoration(
-                                  hintText: 'Select Customer',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    borderSide: BorderSide(color: Colors.transparent),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                ),
-                              );
-                            }
-                          },
+                        child: TextFormField(
+                          // controller: _arrivalterminal12,
+                          decoration: InputDecoration(
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(5.0)),
+                              borderSide: BorderSide(color: Colors.blue),
+                            ),
+                            hintText: "",
+                            fillColor: Colors.grey[200],
+                            filled: false,
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
+
 
 
 
