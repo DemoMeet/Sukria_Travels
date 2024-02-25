@@ -116,6 +116,8 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
 
     customerModel? _selectedCustomer;
     String? _travellerType;
+    // String _travellerType = '';
+
 
     Future<void> _uploadInvoiceDetails(double total) async {
       try {
@@ -140,8 +142,10 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
           'taxes': _taxes18.text,
           'due': _due19.text,
           'total': total,
-          'selectedCustomer': _selectedCustomer?.toString(),
-          'travellerType': _travellerType?.toString(),
+          'selectedCustomer': _selectedCustomer!.name?.toString(),
+          // 'travellerType': _travellerType.toString(),
+          'travellerType': _travellerType.toString() ?? '',
+
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -431,16 +435,17 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                         flex: 10,
                         child: DropdownButtonFormField<String>(
                           value: _travellerType,
-                          onChanged: (newValue) {
+                          onChanged: (newValue1) {
                             setState(() {
-                              _travellerType = newValue!;
+                              _travellerType = newValue1!;
                             });
                           },
+
                           items: <String>['Pensioner', 'Adult', 'Youth', 'Children', 'Infant']
-                              .map<DropdownMenuItem<String>>((String value) {
+                              .map<DropdownMenuItem<String>>((String newValue1) {
                             return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
+                              value: newValue1,
+                              child: Text(newValue1),
                             );
                           }).toList(),
                           decoration: InputDecoration(
