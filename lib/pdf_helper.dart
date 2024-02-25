@@ -327,6 +327,20 @@ class PdfHelper_generate {
                   pw.SizedBox(width: 50),
                 ]),
             pw.SizedBox(height: 2),
+            pw.Row(
+                children: [
+                  pw.Text("    Due",
+                      textAlign: pw.TextAlign.center,
+                      style: pw.TextStyle(
+                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
+                  pw.Expanded(child: pw.SizedBox()),
+                  pw.Text("\$${mdlss.due17}",
+                      textAlign: pw.TextAlign.center,
+                      style: pw.TextStyle(
+                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
+                  pw.SizedBox(width: 50),
+                ]),
+            pw.SizedBox(height: 2),
             pw.Container(
               padding: pw.EdgeInsets.symmetric(vertical: 2),
               decoration: pw.BoxDecoration(

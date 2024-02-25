@@ -1274,8 +1274,9 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                           onPressed: () {
                             double bbb= double.parse(_basefare17.text);
                             double ttt = double.parse(_taxes18.text);
-                            double total = bbb+ttt;
-                            ModelObject ss = ModelObject(invoicenum1: _invoicenum1.text, aircraft9: _aircraft9.text, airlinename7: _airlinename7.text, arrival6: _arrival6.text, arrivaldate16: _arrivaldate16.text, arrivalterminal12: _arrivalterminal12.text, arrivaltime14: _arrivaltime14.text, basefare: bbb, departure5: _departure5.text, departuredate15: _departuredate15.text, departureterminal11: _departureterminal11.text, departuretime13: _departuretime13.text, flightclass10: _flightclass10.text, flightnum8: _flightnum8.text, pnr4: _pnr4.text, taxes: ttt, ticketnumber3: _ticketnumber3.text,total: total, travellername2: _travellername2.text);
+                            double due = double.parse(_due19.text);
+                            double total = bbb+ttt+due;
+                            ModelObject ss = ModelObject(invoicenum1: _invoicenum1.text, aircraft9: _aircraft9.text, airlinename7: _airlinename7.text, arrival6: _arrival6.text, arrivaldate16: _arrivaldate16.text, arrivalterminal12: _arrivalterminal12.text, arrivaltime14: _arrivaltime14.text, basefare: bbb, departure5: _departure5.text, departuredate15: _departuredate15.text, departureterminal11: _departureterminal11.text, departuretime13: _departuretime13.text, flightclass10: _flightclass10.text, flightnum8: _flightnum8.text, pnr4: _pnr4.text, taxes: ttt, ticketnumber3: _ticketnumber3.text,total: total, travellername2: _travellername2.text, due17: _due19.text);
                             PdfHelper_generate.generate(ss);
                             _uploadInvoiceDetails(total);
 

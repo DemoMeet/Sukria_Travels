@@ -17,6 +17,8 @@ class ModelObject {
       departuredate15,
       arrivaldate16;
 
+  String due17;
+
   ModelObject(
       {required this.invoicenum1,
       required this.aircraft9,
@@ -36,5 +38,7 @@ class ModelObject {
       required this.taxes,
       required this.ticketnumber3,
       required this.total,
-      required this.travellername2});
+      required this.travellername2,
+          required this.due17,
+      });
 }
