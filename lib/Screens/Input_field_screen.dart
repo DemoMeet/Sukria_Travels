@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/services.dart';
-
+import 'package:dropdown_search/dropdown_search.dart';
 import '../widgets/customer_model.dart';
 
 class InputFieldScreen extends StatefulWidget {
@@ -24,30 +24,154 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
     double _width = MediaQuery.of(context).size.width;
 
 
-    final _invoicenum1 = TextEditingController(),
-        _travellername2 = TextEditingController(),
-        _ticketnumber3 = TextEditingController(),
-        _pnr4 = TextEditingController(),
-        _departure5 = TextEditingController(),
-        _arrival6 = TextEditingController(),
-        _airlinename7 = TextEditingController(),
-        _flightnum8 = TextEditingController(),
-        _aircraft9 = TextEditingController(),
-        _flightclass10 = TextEditingController(),
-        _departureterminal11 = TextEditingController(),
-        _arrivalterminal12 = TextEditingController(),
-        _departuretime13 = TextEditingController(),
-        _arrivaltime14 = TextEditingController(),
-        _departuredate15 = TextEditingController(),
-        _arrivaldate16 = TextEditingController(),
-        _basefare17 = TextEditingController(),
-        _taxes18 = TextEditingController();
-
-    final _due19 = TextEditingController();
-    // String _selectedCustomer? = TextEditingController();
-    // String? _selectedCustomer;
+    // final _invoicenum1 = TextEditingController(),
+    //     _travellername2 = TextEditingController(),
+    //     _ticketnumber3 = TextEditingController(),
+    //     _pnr4 = TextEditingController(),
+    //     _departure5 = TextEditingController(),
+    //     _arrival6 = TextEditingController(),
+    //     _airlinename7 = TextEditingController(),
+    //     _flightnum8 = TextEditingController(),
+    //     _aircraft9 = TextEditingController(),
+    //     _flightclass10 = TextEditingController(),
+    //     _departureterminal11 = TextEditingController(),
+    //     _arrivalterminal12 = TextEditingController(),
+    //     _departuretime13 = TextEditingController(),
+    //     _arrivaltime14 = TextEditingController(),
+    //     _departuredate15 = TextEditingController(),
+    //     _arrivaldate16 = TextEditingController(),
+    //     _basefare17 = TextEditingController(),
+    //     _taxes18 = TextEditingController();
+    //
+    // final _due19 = TextEditingController();
+    // // String _selectedCustomer? = TextEditingController();
+    // // String? _selectedCustomer;
+    // // customerModel? _selectedCustomer;
     // customerModel? _selectedCustomer;
+    //
+    // Future<void> _uploadInvoiceDetails() async {
+    //   try {
+    //     await FirebaseFirestore.instance.collection('invoice').add({
+    //       'invoicenumber': _invoicenum1.text,
+    //       'traverllername': _travellername2.text,
+    //       'ticketnumber': _ticketnumber3.text,
+    //       'pnr': _pnr4.text,
+    //       'departure': _departure5.text,
+    //       'arrival': _arrival6.text,
+    //       'airlinename': _airlinename7.text,
+    //       'flightnum': _flightnum8.text,
+    //       'aircraft': _aircraft9.text,
+    //       'flightclass1': _flightclass10.text,
+    //       'departureterminal': _departureterminal11.text,
+    //       'arrivalterminal': _arrivalterminal12.text,
+    //       'departuretime': _departuretime13.text,
+    //       'arrivaltime': _arrivaltime14.text,
+    //       'departuredate': _departuredate15.text,
+    //       'arrivaldate': _arrivaldate16.text,
+    //       'basefare': _basefare17.text,
+    //       'taxes': _taxes18.text,
+    //       // 'departuredate': _departuredate15.text,
+    //       'due': _due19,
+    //       'due': _due19,
+    //       'selectedCustomer': _selectedCustomer,
+    //
+    //     });
+    //
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text('Customer details updated'),
+    //       ),
+    //     );
+    //
+    //     // _name.clear();
+    //     // _presentAddress.clear();
+    //     // _permanentAddress.clear();
+    //     // _phone.clear();
+    //     // _email.clear();
+    //     // _due.clear();
+    //   } catch (e) {
+    //     print('Error uploading customer details: $e');
+    //   }
+    // }
+
+    final _invoicenum1 = TextEditingController();
+    final _travellername2 = TextEditingController();
+    final _ticketnumber3 = TextEditingController();
+    final _pnr4 = TextEditingController();
+    final _departure5 = TextEditingController();
+    final _arrival6 = TextEditingController();
+    final _airlinename7 = TextEditingController();
+    final _flightnum8 = TextEditingController();
+    final _aircraft9 = TextEditingController();
+    final _flightclass10 = TextEditingController();
+    final _departureterminal11 = TextEditingController();
+    final _arrivalterminal12 = TextEditingController();
+    final _departuretime13 = TextEditingController();
+    final _arrivaltime14 = TextEditingController();
+    final _departuredate15 = TextEditingController();
+    final _arrivaldate16 = TextEditingController();
+    final _basefare17 = TextEditingController();
+    final _taxes18 = TextEditingController();
+    final _due19 = TextEditingController();
+
     customerModel? _selectedCustomer;
+
+    Future<void> _uploadInvoiceDetails(double total) async {
+      try {
+        await FirebaseFirestore.instance.collection('invoice').add({
+          'invoicenumber': _invoicenum1.text,
+          'traverllername': _travellername2.text,
+          'ticketnumber': _ticketnumber3.text,
+          'pnr': _pnr4.text,
+          'departure': _departure5.text,
+          'arrival': _arrival6.text,
+          'airlinename': _airlinename7.text,
+          'flightnum': _flightnum8.text,
+          'aircraft': _aircraft9.text,
+          'flightclass1': _flightclass10.text,
+          'departureterminal': _departureterminal11.text,
+          'arrivalterminal': _arrivalterminal12.text,
+          'departuretime': _departuretime13.text,
+          'arrivaltime': _arrivaltime14.text,
+          'departuredate': _departuredate15.text,
+          'arrivaldate': _arrivaldate16.text,
+          'basefare': _basefare17.text,
+          'taxes': _taxes18.text,
+          'due': _due19.text,
+          'total': total,
+          'selectedCustomer': _selectedCustomer?.toString(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Customer details updated'),
+          ),
+        );
+
+        // Clearing text fields after successful upload
+        _invoicenum1.clear();
+        _travellername2.clear();
+        _ticketnumber3.clear();
+        _pnr4.clear();
+        _departure5.clear();
+        _arrival6.clear();
+        _airlinename7.clear();
+        _flightnum8.clear();
+        _aircraft9.clear();
+        _flightclass10.clear();
+        _departureterminal11.clear();
+        _arrivalterminal12.clear();
+        _departuretime13.clear();
+        _arrivaltime14.clear();
+        _departuredate15.clear();
+        _arrivaldate16.clear();
+        _basefare17.clear();
+        _taxes18.clear();
+        _due19.clear();
+      } catch (e) {
+        print('Error uploading customer details: $e');
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -1134,7 +1258,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
 
 
 
-
                 Container(
                   margin:
                       EdgeInsets.only(top: _height / 25, left: 10, right: 10),
@@ -1153,6 +1276,8 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                             double total = bbb+ttt;
                             ModelObject ss = ModelObject(invoicenum1: _invoicenum1.text, aircraft9: _aircraft9.text, airlinename7: _airlinename7.text, arrival6: _arrival6.text, arrivaldate16: _arrivaldate16.text, arrivalterminal12: _arrivalterminal12.text, arrivaltime14: _arrivaltime14.text, basefare: bbb, departure5: _departure5.text, departuredate15: _departuredate15.text, departureterminal11: _departureterminal11.text, departuretime13: _departuretime13.text, flightclass10: _flightclass10.text, flightnum8: _flightnum8.text, pnr4: _pnr4.text, taxes: ttt, ticketnumber3: _ticketnumber3.text,total: total, travellername2: _travellername2.text);
                             PdfHelper_generate.generate(ss);
+                            _uploadInvoiceDetails(total);
+
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF1E2772),
