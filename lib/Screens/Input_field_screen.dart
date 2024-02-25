@@ -10,9 +10,14 @@ import 'package:flutter/services.dart';
 
 import '../widgets/customer_model.dart';
 
-class InputFieldScreen extends StatelessWidget {
+class InputFieldScreen extends StatefulWidget {
   const InputFieldScreen({super.key});
 
+  @override
+  State<InputFieldScreen> createState() => _InputFieldScreenState();
+}
+
+class _InputFieldScreenState extends State<InputFieldScreen> {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -41,6 +46,7 @@ class InputFieldScreen extends StatelessWidget {
     final _due19 = TextEditingController();
     // String _selectedCustomer? = TextEditingController();
     // String? _selectedCustomer;
+    // customerModel? _selectedCustomer;
     customerModel? _selectedCustomer;
 
     return Scaffold(
@@ -1035,6 +1041,7 @@ class InputFieldScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 Container(
                   margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: Row(
@@ -1097,7 +1104,8 @@ class InputFieldScreen extends StatelessWidget {
                                 }).toList(),
                                 onChanged: (customerModel? value) {
 
-                                    _selectedCustomer = value;
+                                  _selectedCustomer = value;
+                                  _due19.text = _selectedCustomer!.due.toString();
 
                                 },
                                 decoration: InputDecoration(
@@ -1121,6 +1129,8 @@ class InputFieldScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
+
 
 
 
