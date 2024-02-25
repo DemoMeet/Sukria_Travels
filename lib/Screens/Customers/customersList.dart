@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer_management/Screens/Customers/customerDetails.dart';
-import 'package:customer_management/widgets/customer_model.dart'; // Importing customerModel
+import 'package:customer_management/Screens/Customers/viewCustomerPage.dart';
+import 'package:customer_management/widgets/customer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -321,7 +322,43 @@ class _CustomerListState extends State<CustomerList> {
                                     ),
                                   ],
                                 ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.visibility),
+                                      onPressed: () {
+                                        // Navigate to view page
+                                        Get.to(ViewCustomerPage(customer: customer));
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () async {
+                                        // Delete the customer from the database
+                                        await FirebaseFirestore.instance
+                                            .collection('customers')
+                                            .doc(customer.id)
+                                            .delete()
+                                            .then((value) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Customer deleted successfully'),
+                                            ),
+                                          );
+                                        }).catchError((error) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Failed to delete customer: $error'),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 onTap: () {
+                                  // Handle tapping on the entire list tile, if needed
                                   Get.to(CustomerDetails(customer: customer));
                                 },
                               );
