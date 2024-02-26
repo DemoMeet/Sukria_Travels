@@ -9,6 +9,8 @@ import 'package:customer_management/Screens/Input_field_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'Screens/transactionList.dart';
+
 Future<void> main() async {
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -51,6 +53,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: invoiceList,
           page: () => InvoiceList(),
+        ),
+        GetPage(
+          name: transactionList,
+          page: () => TransactionList(),
         ),
         GetPage(
           name: customers,

@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 
 class PdfHelper_generate {
   static Future<File> generate(
-      ModelObject mdlss) async {
+      ModelObject mdlss, double due) async {
     final pdf = pw.Document();
     final fonts = await rootBundle.load("assets/arial.ttf");
     final ttfbold = pw.Font.ttf(fonts);
@@ -334,7 +334,7 @@ class PdfHelper_generate {
                       style: pw.TextStyle(
                           fontSize: 10, font: ttfbold, color: PdfColors.black)),
                   pw.Expanded(child: pw.SizedBox()),
-                  pw.Text("\$${mdlss.due17}",
+                  pw.Text("\$${due}",
                       textAlign: pw.TextAlign.center,
                       style: pw.TextStyle(
                           fontSize: 10, font: ttfbold, color: PdfColors.black)),

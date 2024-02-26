@@ -3,7 +3,7 @@ class ModelObject {
   String invoicenum1,
       travellername2,
       ticketnumber3,
-      pnr4,
+      pnr4,customername, customerid,
       departure5,
       arrival6,
       airlinename7,
@@ -17,7 +17,6 @@ class ModelObject {
       departuredate15,
       arrivaldate16;
 
-  String due17;
 
   ModelObject(
       {required this.invoicenum1,
@@ -25,7 +24,7 @@ class ModelObject {
       required this.airlinename7,
       required this.arrival6,
       required this.arrivaldate16,
-      required this.arrivalterminal12,
+      required this.arrivalterminal12,required this.customerid, required this.customername,
       required this.arrivaltime14,
       required this.basefare,
       required this.departure5,
@@ -39,6 +38,5 @@ class ModelObject {
       required this.ticketnumber3,
       required this.total,
       required this.travellername2,
-          required this.due17,
       });
 }

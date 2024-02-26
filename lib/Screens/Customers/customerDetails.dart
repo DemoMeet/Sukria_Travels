@@ -21,8 +21,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
   late TextEditingController _presentAddressController;
   late TextEditingController _permanentAddressController;
   late TextEditingController _phoneController;
-  late TextEditingController _dueController;
-  late TextEditingController _paymentController;
 
   @override
   void initState() {
@@ -32,8 +30,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
     _presentAddressController = TextEditingController(text: widget.customer.presentAddress);
     _permanentAddressController = TextEditingController(text: widget.customer.permanentAddress);
     _phoneController = TextEditingController(text: widget.customer.phone);
-    _dueController = TextEditingController(text: widget.customer.due?.toStringAsFixed(2));
-    _paymentController = TextEditingController();
   }
 
 
@@ -251,7 +247,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                       Expanded(
                         flex: 10,
                         child: Text(
-                          "Payment Due",
+                          " ",
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -291,28 +287,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                         ),
                       ),
                       Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _dueController,
-                          decoration: InputDecoration(
-
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "0.0",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-
-                          ),
-                          readOnly: true,
-                        ),
+                        flex: 10,child: SizedBox(),
                       )
                     ],
                   ),
@@ -355,24 +330,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                     children: [
                       Expanded(
                         flex: 10,
-                        child: TextFormField(
-                          controller: _paymentController,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "0.0",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
+                        child: SizedBox(),
                       ),
                       const Expanded(
                         flex: 1,
@@ -466,7 +424,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
         'presentAddress': _presentAddressController.text,
         'permanentAddress': _permanentAddressController.text,
         'phone': _phoneController.text,
-        'due': (double.parse(_dueController.text)-double.parse(_paymentController.text)),
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -489,7 +446,6 @@ class _CustomerDetailsState extends State<CustomerDetails> {
     _presentAddressController.dispose();
     _permanentAddressController.dispose();
     _phoneController.dispose();
-    _dueController.dispose();
     super.dispose();
   }
 }

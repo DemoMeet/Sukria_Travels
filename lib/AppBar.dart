@@ -61,7 +61,6 @@ AppBar myAppBar(BuildContext context, double _width) {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -92,6 +91,22 @@ AppBar myAppBar(BuildContext context, double _width) {
                 padding: EdgeInsets.all(8),
                 child: Text(
                   "Customers List",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 5),
+            InkWell(
+              onTap: () {
+                Get.toNamed(transactionList);
+              },
+              child: Container(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  "Transactions",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
@@ -162,6 +177,22 @@ AppBar myAppBar(BuildContext context, double _width) {
                 padding: EdgeInsets.all(5),
                 child: Text(
                   "Customers List",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 5),
+            InkWell(
+              onTap: () {
+                Get.toNamed(transactionList);
+              },
+              child: Container(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  "Transactions",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,

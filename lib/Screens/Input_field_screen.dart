@@ -21,6 +21,28 @@ class InputFieldScreen extends StatefulWidget {
 class _InputFieldScreenState extends State<InputFieldScreen> {
   List<customerModel> allcustomer = [];
 
+  final _invoicenum1 = TextEditingController();
+  final _travellername2 = TextEditingController();
+  final _ticketnumber3 = TextEditingController();
+  final _pnr4 = TextEditingController();
+  final _departure5 = TextEditingController();
+  final _arrival6 = TextEditingController();
+  final _airlinename7 = TextEditingController();
+  final _flightnum8 = TextEditingController();
+  final _aircraft9 = TextEditingController();
+  final _flightclass10 = TextEditingController();
+  final _departureterminal11 = TextEditingController();
+  final _arrivalterminal12 = TextEditingController();
+  final _departuretime13 = TextEditingController();
+  final _arrivaltime14 = TextEditingController();
+  final _departuredate15 = TextEditingController();
+  final _arrivaldate16 = TextEditingController();
+  final _basefare17 = TextEditingController();
+  final _taxes18 = TextEditingController();
+  final _due19 = TextEditingController();
+
+  customerModel? _selectedCustomer;
+  String? _travellerType;
   Future<void> _fetch() async {
     await FirebaseFirestore.instance
         .collection('customers')
@@ -49,34 +71,24 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
     _fetch();
   }
 
+  void decreaseDueAmount(String documentId, double amountToDecrease) async {
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection('customers').doc(documentId);
+    final DocumentSnapshot documentSnapshot = await documentReference.get();
+    if (documentSnapshot.exists) {
+      double currentDue = documentSnapshot['due'] ?? 0.0;
+      double newDue = currentDue + amountToDecrease;
+      await documentReference.update({'due': newDue});
+      print('Due amount decreased successfully!');
+    } else {
+      print('Document does not exist.');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
 
-    final _invoicenum1 = TextEditingController();
-    final _travellername2 = TextEditingController();
-    final _ticketnumber3 = TextEditingController();
-    final _pnr4 = TextEditingController();
-    final _departure5 = TextEditingController();
-    final _arrival6 = TextEditingController();
-    final _airlinename7 = TextEditingController();
-    final _flightnum8 = TextEditingController();
-    final _aircraft9 = TextEditingController();
-    final _flightclass10 = TextEditingController();
-    final _departureterminal11 = TextEditingController();
-    final _arrivalterminal12 = TextEditingController();
-    final _departuretime13 = TextEditingController();
-    final _arrivaltime14 = TextEditingController();
-    final _departuredate15 = TextEditingController();
-    final _arrivaldate16 = TextEditingController();
-    final _basefare17 = TextEditingController();
-    final _taxes18 = TextEditingController();
-    final _due19 = TextEditingController();
-
-    customerModel? _selectedCustomer;
-    String? _travellerType;
-    // String _travellerType = '';
 
     Future<void> _uploadInvoiceDetails() async {
       try {
@@ -106,11 +118,12 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
             'arrivaldate': _arrivaldate16.text,
             'basefare': double.parse(_basefare17.text),
             'taxes': double.parse(_taxes18.text),
+            'selectedCustomerid':_selectedCustomer!.id.toString(),
             'selectedCustomer': _selectedCustomer!.name.toString(),
             'travellerType': _travellerType.toString() ?? '',
-          }).then((value){
-
-
+          }).then((value){  decreaseDueAmount(
+              _selectedCustomer!.id,
+              double.parse(_basefare17.text) + double.parse(_taxes18.text));
             Get.offNamed(invoiceList);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -118,17 +131,15 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
               ),
             );
           });
-
         }
       } catch (e) {
         print('Error uploading customer details: $e');
       }
     }
-
     return Scaffold(
       appBar: myAppBar(context, _width),
       body: Container(
-        margin: EdgeInsets.only(top: 10, left: 30),
+        margin: const EdgeInsets.only(top: 10, left: 30),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
@@ -226,7 +237,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                             hintText: "Select",
                             fillColor: Colors.grey[200],
                             filled: true,
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5.0)),
                               borderSide: BorderSide(color: Colors.transparent),
@@ -324,7 +335,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                   BorderRadius.all(Radius.circular(5.0)),
                               borderSide: BorderSide(color: Colors.transparent),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5.0)),
                               borderSide: BorderSide(color: Colors.blue),
@@ -1129,28 +1140,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                             double due = double.parse(_due19.text);
                             double total = bbb + ttt + due;
                             _uploadInvoiceDetails();
-                            ModelObject ss = ModelObject(
-                                invoicenum1: _invoicenum1.text,
-                                aircraft9: _aircraft9.text,
-                                airlinename7: _airlinename7.text,
-                                arrival6: _arrival6.text,
-                                arrivaldate16: _arrivaldate16.text,
-                                arrivalterminal12: _arrivalterminal12.text,
-                                arrivaltime14: _arrivaltime14.text,
-                                basefare: bbb,
-                                departure5: _departure5.text,
-                                departuredate15: _departuredate15.text,
-                                departureterminal11: _departureterminal11.text,
-                                departuretime13: _departuretime13.text,
-                                flightclass10: _flightclass10.text,
-                                flightnum8: _flightnum8.text,
-                                pnr4: _pnr4.text,
-                                taxes: ttt,
-                                ticketnumber3: _ticketnumber3.text,
-                                total: total,
-                                travellername2: _travellername2.text,
-                                due17: _due19.text);
-                            PdfHelper_generate.generate(ss);
+
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF1E2772),
