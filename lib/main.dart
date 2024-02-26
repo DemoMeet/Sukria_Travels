@@ -60,8 +60,6 @@ class MyApp extends StatelessWidget {
           name: customersList,
           page: () => CustomerList(),
         ),
-
-
       ],
 
       theme: ThemeData(
