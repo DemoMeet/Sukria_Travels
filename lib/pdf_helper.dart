@@ -77,7 +77,7 @@ class PdfHelper_generate {
               ),
               pw.SizedBox(height: 10),
               pw.Container(
-                child: pw.Text(mdlss.travellername2,
+                child: pw.Text(mdlss.travellername2.length==0?mdlss.customername:mdlss.travellername2,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 12, font: ttfbold, color: PdfColors.black)),

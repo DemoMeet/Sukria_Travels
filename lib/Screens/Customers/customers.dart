@@ -32,18 +32,12 @@ class _CustomersState extends State<Customers> {
         'due': 0.0,
       });
 
+      Get.toNamed(customersList);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Customer details updated'),
         ),
       );
-
-      _name.clear();
-      _presentAddress.clear();
-      _permanentAddress.clear();
-      _phone.clear();
-      _email.clear();
-      _due.clear();
     } catch (e) {
       print('Error uploading customer details: $e');
     }
