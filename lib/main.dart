@@ -14,22 +14,19 @@ import 'Screens/transactionList.dart';
 Future<void> main() async {
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyAaQdp5ZCnTXU6ToRIvdyU858AFN4L1qM8",
-        authDomain: "shukriyatravels.firebaseapp.com",
-        projectId: "shukriyatravels",
-        storageBucket: "shukriyatravels.appspot.com",
-        messagingSenderId: "818328042604",
-        appId: "1:818328042604:web:8c8900389b3a4ddd3a6c49",
-        measurementId: "G-H70J6S5LH4"
-    )
-  );
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyAaQdp5ZCnTXU6ToRIvdyU858AFN4L1qM8",
+          authDomain: "shukriyatravels.firebaseapp.com",
+          projectId: "shukriyatravels",
+          storageBucket: "shukriyatravels.appspot.com",
+          messagingSenderId: "818328042604",
+          appId: "1:818328042604:web:8c8900389b3a4ddd3a6c49",
+          measurementId: "G-H70J6S5LH4"));
 
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
