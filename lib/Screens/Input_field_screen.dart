@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customer_management/Screens/travelerModel.dart';
 import 'package:customer_management/modeel.dart';
 import 'package:customer_management/routes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:customer_management/pdf_helper.dart';
 import 'package:get/get.dart';
@@ -20,7 +22,7 @@ class InputFieldScreen extends StatefulWidget {
 
 class _InputFieldScreenState extends State<InputFieldScreen> {
   List<customerModel> allcustomer = [];
-
+  List<travellerModel> traveller = [];
   final _invoicenum1 = TextEditingController();
   final _travellername2 = TextEditingController();
   final _ticketnumber3 = TextEditingController();
@@ -44,6 +46,11 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
   customerModel? _selectedCustomer;
   String? _travellerType;
   Future<void> _fetch() async {
+    traveller.add(travellerModel(
+        name: TextEditingController(),
+        price: TextEditingController(),
+        ticketnumber: TextEditingController(),
+        type: null));
     await FirebaseFirestore.instance
         .collection('customers')
         .get()
@@ -73,7 +80,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
 
   void decreaseDueAmount(String documentId, double amountToDecrease) async {
     final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection('customers').doc(documentId);
+        FirebaseFirestore.instance.collection('customers').doc(documentId);
     final DocumentSnapshot documentSnapshot = await documentReference.get();
     if (documentSnapshot.exists) {
       double currentDue = documentSnapshot['due'] ?? 0.0;
@@ -84,21 +91,38 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
       print('Document does not exist.');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
 
+    _addtoTraveller() {
+      setState(() {
+        traveller.add(travellerModel(
+            name: TextEditingController(),
+            price: TextEditingController(),
+            ticketnumber: TextEditingController(),
+            type: null));
+      });
+    }
+
+    _removeTraveller(int index) {
+      setState(() {
+        if(!(traveller.length==1)){
+        traveller.removeAt(index);}
+      });
+    }
 
     Future<void> _uploadInvoiceDetails() async {
       try {
-        if(_selectedCustomer == null){
+        if (_selectedCustomer == null) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Please Select A Customer..'),
             ),
           );
-        }else{
+        } else {
           await FirebaseFirestore.instance.collection('invoice').add({
             'invoicenumber': _invoicenum1.text,
             'traverllername': _travellername2.text,
@@ -118,12 +142,12 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
             'arrivaldate': _arrivaldate16.text,
             'basefare': double.parse(_basefare17.text),
             'taxes': double.parse(_taxes18.text),
-            'selectedCustomerid':_selectedCustomer!.id.toString(),
+            'selectedCustomerid': _selectedCustomer!.id.toString(),
             'selectedCustomer': _selectedCustomer!.name.toString(),
             'travellerType': _travellerType.toString() ?? '',
-          }).then((value){  decreaseDueAmount(
-              _selectedCustomer!.id,
-              double.parse(_basefare17.text) + double.parse(_taxes18.text));
+          }).then((value) {
+            decreaseDueAmount(_selectedCustomer!.id,
+                double.parse(_basefare17.text) + double.parse(_taxes18.text));
             Get.offNamed(invoiceList);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -136,6 +160,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
         print('Error uploading customer details: $e');
       }
     }
+
     return Scaffold(
       appBar: myAppBar(context, _width),
       body: Container(
@@ -173,7 +198,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       Expanded(
                         flex: 10,
                         child: Text(
-                          "Traveller Type",
+                          "Customer Name",
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -201,108 +226,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                               borderSide: BorderSide(color: Colors.blue),
                             ),
                             hintText: "Invoice Number",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: DropdownButtonFormField<String>(
-                          value: _travellerType,
-                          onChanged: (newValue1) {
-                            setState(() {
-                              _travellerType = newValue1!;
-                            });
-                          },
-                          items: <String>[
-                            'Pensioner',
-                            'Adult',
-                            'Youth',
-                            'Children',
-                            'Infant'
-                          ].map<DropdownMenuItem<String>>((String newValue1) {
-                            return DropdownMenuItem<String>(
-                              value: newValue1,
-                              child: Text(newValue1),
-                            );
-                          }).toList(),
-                          decoration: InputDecoration(
-                            hintText: "Select",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.only(top: _height / 25, left: 10, right: 10),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "Traveller Name",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "Customer Name",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _travellername2,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "Traveller Name",
                             fillColor: Colors.grey[200],
                             filled: true,
                           ),
@@ -351,86 +274,272 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                 Container(
                   margin:
                       EdgeInsets.only(top: _height / 25, left: 10, right: 10),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Row(
                     children: [
                       Expanded(
-                        flex: 10,
                         child: Text(
-                          "Ticket Number",
-                          style: TextStyle(fontSize: 16),
+                            "Travellers",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green, // Change the background color here
+                          borderRadius: BorderRadius.circular(25), // Optional: Add border radius for rounded corners
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            _addtoTraveller();
+                          },
+                          icon: const Icon(
+                            Icons.add,size: 25,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
+                      SizedBox(width: 5,),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red, // Change the background color here
+                          borderRadius: BorderRadius.circular(25), // Optional: Add border radius for rounded corners
                         ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "PNR",
-                          style: TextStyle(fontSize: 16),
+                        child: IconButton(
+                          onPressed: () {
+                            _removeTraveller(traveller.length-1);
+                          },
+                          icon: const Icon(
+                            Icons.delete_outline,size: 25,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
+                Divider(),
                 Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _ticketnumber3,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
+                  height: (215 * (traveller.length)).toDouble(),
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: traveller.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 5, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: Text(
+                                      "${index+1}. Traveller Name",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: Text(
+                                      "${index+1}. Traveller Type",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: TextFormField(
+                                      controller: traveller[index].name,
+                                      decoration: InputDecoration(
+                                        enabledBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                        ),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.blue),
+                                        ),
+                                        hintText: "Traveller Name",
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                      ),
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: DropdownButtonFormField<String>(
+                                      value: traveller[index].type,
+                                      onChanged: (newValue1) {
+                                        setState(() {
+                                          traveller[index].type = newValue1!;
+                                        });
+                                      },
+                                      items: <String>[
+                                        'Pensioner',
+                                        'Adult',
+                                        'Youth',
+                                        'Children',
+                                        'Infant'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String newValue1) {
+                                        return DropdownMenuItem<String>(
+                                          value: newValue1,
+                                          child: Text(newValue1),
+                                        );
+                                      }).toList(),
+                                      decoration: InputDecoration(
+                                        hintText: "Select",
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                        enabledBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.blue),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            hintText: "Ticket Number",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _pnr4,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 20, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: Text(
+                                      "${index +1}. Ticket Number",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: Text(
+                                      "${index + 1}. Ticket Price",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: TextFormField(
+                                      controller: traveller[index].ticketnumber,
+                                      decoration: InputDecoration(
+                                        enabledBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                        ),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.blue),
+                                        ),
+                                        hintText: "Ticket Number",
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                      ),
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: TextFormField(
+                                      controller: traveller[index].price,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: <TextInputFormatter>[
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
+                                      decoration: InputDecoration(
+                                        enabledBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                        ),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide:
+                                              BorderSide(color: Colors.blue),
+                                        ),
+                                        hintText: "Ticket Price",
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                            hintText: "PNR",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
-                      )
-                    ],
+                            SizedBox(height: 10,),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Container(
@@ -1140,7 +1249,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                             double due = double.parse(_due19.text);
                             double total = bbb + ttt + due;
                             _uploadInvoiceDetails();
-
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF1E2772),
