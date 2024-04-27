@@ -26,22 +26,19 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
   final _invoicenum1 = TextEditingController();
   final _travellername2 = TextEditingController();
   final _ticketnumber3 = TextEditingController();
-  final _pnr4 = TextEditingController();
   final _departure5 = TextEditingController();
   final _arrival6 = TextEditingController();
   final _airlinename7 = TextEditingController();
   final _flightnum8 = TextEditingController();
-  final _aircraft9 = TextEditingController();
-  final _flightclass10 = TextEditingController();
   final _departureterminal11 = TextEditingController();
   final _arrivalterminal12 = TextEditingController();
   final _departuretime13 = TextEditingController();
   final _arrivaltime14 = TextEditingController();
   final _departuredate15 = TextEditingController();
   final _arrivaldate16 = TextEditingController();
-  final _basefare17 = TextEditingController();
-  final _taxes18 = TextEditingController();
+  double _basefare17 = 0.0;
   final _due19 = TextEditingController();
+  final _bsp = TextEditingController();
 
   customerModel? _selectedCustomer;
   String? _travellerType;
@@ -109,9 +106,22 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
 
     _removeTraveller(int index) {
       setState(() {
-        if(!(traveller.length==1)){
-        traveller.removeAt(index);}
+        if (!(traveller.length == 1)) {
+          traveller.removeAt(index);
+        }
       });
+    }
+
+    _updatebasefare() {
+      _basefare17 = 0;
+      for (var travellerItem in traveller) {
+        try {
+          double price = double.parse(travellerItem.price.text);
+          _basefare17 += price;
+          _bsp.text = _basefare17.toString();
+          setState(() {});
+        } catch (e) {}
+      }
     }
 
     Future<void> _uploadInvoiceDetails() async {
@@ -123,31 +133,36 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
             ),
           );
         } else {
+          List<Map<String, dynamic>> travellersData = [];
+          traveller.forEach((traveller) {
+            Map<String, dynamic> travellerMap = {
+              'type': traveller.type,
+              'name': traveller.name.text,
+              'ticketnumber': traveller.ticketnumber.text,
+              'price': traveller.price.text,
+            };
+            travellersData.add(travellerMap);
+          });
           await FirebaseFirestore.instance.collection('invoice').add({
             'invoicenumber': _invoicenum1.text,
             'traverllername': _travellername2.text,
             'ticketnumber': _ticketnumber3.text,
-            'pnr': _pnr4.text,
-            'departure': _departure5.text,
+            'departure': _departure5.text,'travellers': travellersData,
             'arrival': _arrival6.text,
             'airlinename': _airlinename7.text,
             'flightnum': _flightnum8.text,
-            'aircraft': _aircraft9.text,
-            'flightclass1': _flightclass10.text,
             'departureterminal': _departureterminal11.text,
             'arrivalterminal': _arrivalterminal12.text,
             'departuretime': _departuretime13.text,
             'arrivaltime': _arrivaltime14.text,
             'departuredate': _departuredate15.text,
             'arrivaldate': _arrivaldate16.text,
-            'basefare': double.parse(_basefare17.text),
-            'taxes': double.parse(_taxes18.text),
+            'basefare': _basefare17,
             'selectedCustomerid': _selectedCustomer!.id.toString(),
             'selectedCustomer': _selectedCustomer!.name.toString(),
             'travellerType': _travellerType.toString() ?? '',
           }).then((value) {
-            decreaseDueAmount(_selectedCustomer!.id,
-                double.parse(_basefare17.text) + double.parse(_taxes18.text));
+            decreaseDueAmount(_selectedCustomer!.id, _basefare17);
             Get.offNamed(invoiceList);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -278,37 +293,44 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                            "Travellers",
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          "Travellers",
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.green, // Change the background color here
-                          borderRadius: BorderRadius.circular(25), // Optional: Add border radius for rounded corners
+                          color:
+                              Colors.green, // Change the background color here
+                          borderRadius: BorderRadius.circular(
+                              25), // Optional: Add border radius for rounded corners
                         ),
                         child: IconButton(
                           onPressed: () {
                             _addtoTraveller();
                           },
                           icon: const Icon(
-                            Icons.add,size: 25,
+                            Icons.add,
+                            size: 25,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(
+                        width: 5,
+                      ),
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.red, // Change the background color here
-                          borderRadius: BorderRadius.circular(25), // Optional: Add border radius for rounded corners
+                          borderRadius: BorderRadius.circular(
+                              25), // Optional: Add border radius for rounded corners
                         ),
                         child: IconButton(
                           onPressed: () {
-                            _removeTraveller(traveller.length-1);
+                            _removeTraveller(traveller.length - 1);
                           },
                           icon: const Icon(
-                            Icons.delete_outline,size: 25,
+                            Icons.delete_outline,
+                            size: 25,
                             color: Colors.white,
                           ),
                         ),
@@ -339,7 +361,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                   Expanded(
                                     flex: 10,
                                     child: Text(
-                                      "${index+1}. Traveller Name",
+                                      "${index + 1}. Traveller Name",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   ),
@@ -352,7 +374,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                   Expanded(
                                     flex: 10,
                                     child: Text(
-                                      "${index+1}. Traveller Type",
+                                      "${index + 1}. Traveller Type",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   ),
@@ -440,8 +462,8 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(
-                                  top: 20, left: 10, right: 10),
+                              margin:
+                                  EdgeInsets.only(top: 20, left: 10, right: 10),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -449,7 +471,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                   Expanded(
                                     flex: 10,
                                     child: Text(
-                                      "${index +1}. Ticket Number",
+                                      "${index + 1}. Ticket Number",
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   ),
@@ -513,6 +535,9 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                       inputFormatters: <TextInputFormatter>[
                                         FilteringTextInputFormatter.digitsOnly
                                       ],
+                                      onChanged: (val) {
+                                        _updatebasefare();
+                                      },
                                       decoration: InputDecoration(
                                         enabledBorder: const OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
@@ -535,7 +560,9 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                           ],
                         );
                       },
@@ -704,91 +731,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                               borderSide: BorderSide(color: Colors.blue),
                             ),
                             hintText: "Flight Number",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.only(top: _height / 25, left: 10, right: 10),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "Aircraft",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "Flight Class",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _aircraft9,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "Aircraft",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _flightclass10,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "Flight Class",
                             fillColor: Colors.grey[200],
                             filled: true,
                           ),
@@ -1074,7 +1016,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       Expanded(
                         flex: 10,
                         child: Text(
-                          "Taxes, Surcharge & Fees",
+                          "Due",
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
@@ -1089,7 +1031,8 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       Expanded(
                         flex: 10,
                         child: TextFormField(
-                          controller: _basefare17,
+                          controller: _bsp,
+                          readOnly: true,
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -1105,7 +1048,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                   BorderRadius.all(Radius.circular(5.0)),
                               borderSide: BorderSide(color: Colors.blue),
                             ),
-                            hintText: "Base Fare",
+                            hintText: "Total Fare",
                             fillColor: Colors.grey[200],
                             filled: true,
                           ),
@@ -1117,68 +1060,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                           height: 1,
                         ),
                       ),
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          controller: _taxes18,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "Taxes, Surcharge & Fees",
-                            fillColor: Colors.grey[200],
-                            filled: true,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin:
-                      EdgeInsets.only(top: _height / 25, left: 10, right: 10),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "Due",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: Text(
-                          "",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
                       Expanded(
                         flex: 10,
                         child: TextFormField(
@@ -1201,33 +1082,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                           readOnly: true,
                         ),
                       ),
-                      const Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          height: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 10,
-                        child: TextFormField(
-                          // controller: _arrivalterminal12,
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            hintText: "",
-                            fillColor: Colors.grey[200],
-                            filled: false,
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
@@ -1244,10 +1098,9 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            double bbb = double.parse(_basefare17.text);
-                            double ttt = double.parse(_taxes18.text);
+                            double bbb = _basefare17;
                             double due = double.parse(_due19.text);
-                            double total = bbb + ttt + due;
+                            double total = bbb + due;
                             _uploadInvoiceDetails();
                           },
                           style: ElevatedButton.styleFrom(
