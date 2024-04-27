@@ -14,7 +14,9 @@ class InvoiceList extends StatefulWidget {
   State<InvoiceList> createState() => _InvoiceListState();
 }
 
-class _InvoiceListState extends State<InvoiceList> {
+class _InvoiceListState extends State<InvoiceList> {final TextEditingController searchController = TextEditingController();
+ String searchString = '';
+
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height;
@@ -39,12 +41,39 @@ class _InvoiceListState extends State<InvoiceList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
-              child: const Text(
-                "Flight Invoices Lists",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
+                  child: const Text(
+                    "Flight Invoices Lists",
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  ),
+                ),Container(width: 270,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      labelText: 'Search by customer name or phone',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          searchController.clear();
+                          setState(() {
+                            searchString = '';
+                          });
+                        },
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchString = value.toLowerCase();
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 100,),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -66,71 +95,67 @@ class _InvoiceListState extends State<InvoiceList> {
 
                   const List<DataColumn> columns = [
                     DataColumn(label: Text('Invoice Number')),
-                    DataColumn(label: Text('Traveller Name')),
                     DataColumn(label: Text('Customer Name')),
-                    DataColumn(label: Text('Ticket Number')),
                     DataColumn(label: Text('Airline Name')),
                     DataColumn(label: Text('Flight Number')),
-                    DataColumn(label: Text('Departure Terminal')),
                     DataColumn(label: Text('Departure')),
+                    DataColumn(label: Text('Arrival')),
                     DataColumn(label: Text('Fare')),
                     DataColumn(label: Text('Action')),
                   ];
+                  List<DataRow> rows = snapshot.data!.docs.where((document) {
+                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                    String customerName = data['selectedCustomer'].toString().toLowerCase();
+                    String customerPhone = data['selectedCustomerphone'].toString().toLowerCase();
+                    return customerName.contains(searchString) || customerPhone.contains(searchString);
 
-                  List<DataRow> rows = snapshot.data!.docs.map((document) {
-                    Map<String, dynamic> data =
-                        document.data() as Map<String, dynamic>;
+                  }).map((document) {
+                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                    List<Map<String, dynamic>> travellersData =
+                    List<Map<String, dynamic>>.from(data['travellers'] ?? []);
                     return DataRow(cells: [
                       DataCell(Text(data['invoicenumber'].toString())),
-                      DataCell(Text(data['traverllername'].toString())),
                       DataCell(Text(data['selectedCustomer'].toString())),
-                      DataCell(Text(data['ticketnumber'].toString())),
                       DataCell(Text(data['airlinename'].toString())),
-                      DataCell(Text(data['flightnumber'].toString())),
-                      DataCell(Text(data['departureterminal'].toString())),
+                      DataCell(Text(data['flightnum'].toString())),
                       DataCell(Text(
                           "${data['departuretime']} ${data['departuredate']}")),
-                      DataCell(
-                          Text((data['basefare'] + data['taxes']).toString())),
+                      DataCell(Text(
+                          "${data['arrivaltime']} ${data['arrivaldate']}")),
+                      DataCell(Text(data['basefare'].toString())),
                       DataCell(Row(
                         children: [
                           IconButton(
                             icon: Icon(Icons.local_print_shop_outlined),
                             onPressed: () async {
-                              ModelObject ss = ModelObject(
-                                invoicenum1: data['invoicenumber'],
-                                aircraft9: data['aircraft'],
-                                customername: data['selectedCustomer'],
-                                customerid: data['selectedCustomerid'],
-                                airlinename7: data['airlinename'],
-                                arrival6: data['arrival'],
-                                arrivaldate16: data['arrivaldate'],
-                                arrivalterminal12: data['arrivalterminal'],
-                                arrivaltime14: data['arrivaltime'],
-                                basefare: data['basefare'],
-                                departure5: data['departure'],
-                                departuredate15: data['departuredate'],
-                                departureterminal11: data['departureterminal'],
-                                departuretime13: data['departuretime'],
-                                flightclass10: data['flightclass1'],
-                                flightnum8: data['flightnum'],
-                                pnr4: data['pnr'],
-                                taxes: data['taxes'],
-                                ticketnumber3: data['ticketnumber'],
-                                total: data['taxes'] + data['basefare'],
-                                travellername2: data['traverllername'],
+                              InvoiceModel invoice = InvoiceModel(
+                                invoicenumber: data['invoicenumber'],
+                                departure: data['departure'],
+                                arrival: data['arrival'],
+                                airlinename: data['airlinename'],
+                                flightnum: data['flightnum'],
+                                departureterminal: data['departureterminal'],
+                                arrivalterminal: data['arrivalterminal'],
+                                departuretime: data['departuretime'],
+                                arrivaltime: data['arrivaltime'],
+                                departuredate: data['departuredate'],
+                                arrivaldate: data['arrivaldate'],
+                                basefare: data['basefare'],selectedCustomerphone: data['selectedCustomerphone'],
+                                selectedCustomerid: data['selectedCustomerid'],
+                                selectedCustomer: data['selectedCustomer'],
+                                travellerType: data['travellerType'],
+                                travellers: travellersData,
                               );
                               PdfHelper_generate.generate(
-                                  ss,
-                                  await getcurrentdue(
-                                      data['selectedCustomerid']));
+                                invoice,
+                                await getcurrentdue(data['selectedCustomerid']),
+                              );
                             },
                           ),
                         ],
                       )),
                     ]);
                   }).toList();
-
                   return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: DataTable(

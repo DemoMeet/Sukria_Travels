@@ -8,13 +8,12 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 
 class PdfHelper_generate {
-  static Future<File> generate(
-      ModelObject mdlss, double due) async {
+  static Future<File> generate(InvoiceModel mdlss, double due) async {
     final pdf = pw.Document();
     final fonts = await rootBundle.load("assets/arial.ttf");
     final ttfbold = pw.Font.ttf(fonts);
-    final imageByteData = (await rootBundle.load('assets/logo.jpg')).buffer.asUint8List();
-
+    final imageByteData =
+        (await rootBundle.load('assets/logo.jpg')).buffer.asUint8List();
 
     final image = pw.MemoryImage(imageByteData);
     List<pw.Widget> widgets = [];
@@ -32,10 +31,9 @@ class PdfHelper_generate {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
-                    pw.Image(image,
-                        height: 60),
+                    pw.Image(image, height: 60),
                     pw.Container(
-                        child: pw.Text(" Invoice No #${mdlss.invoicenum1}",
+                        child: pw.Text(" Invoice No #${mdlss.invoicenumber}",
                             style: pw.TextStyle(
                                 fontSize: 14,
                                 font: ttfbold,
@@ -76,12 +74,14 @@ class PdfHelper_generate {
                         fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
               ),
               pw.SizedBox(height: 10),
-              pw.Container(
-                child: pw.Text(mdlss.travellername2.length==0?mdlss.customername:mdlss.travellername2,
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(
-                        fontSize: 12, font: ttfbold, color: PdfColors.black)),
-              ),
+              for (var traveller in mdlss.travellers)
+                pw.Container(
+                  child: pw.Text(
+                      traveller['name'],
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(
+                          fontSize: 12, font: ttfbold, color: PdfColors.black)),
+                ),
             ],
           ),
           pw.Column(
@@ -94,30 +94,34 @@ class PdfHelper_generate {
                         fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
               ),
               pw.SizedBox(height: 10),
-              pw.Container(
-                child: pw.Text(mdlss.ticketnumber3,
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(
-                        fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
-              ),
+              for (var traveller in mdlss.travellers)
+                pw.Container(
+                  child: pw.Text(
+                      traveller['ticketnumber'],
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(
+                          fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
+                ),
             ],
           ),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Container(
-                child: pw.Text("PNR",
+                child: pw.Text("Ticket Price",
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
               ),
               pw.SizedBox(height: 10),
-              pw.Container(
-                child: pw.Text(mdlss.pnr4,
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(
-                        fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
-              ),
+              for (var traveller in mdlss.travellers)
+                pw.Container(
+                  child: pw.Text(
+                      traveller['price'],
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(
+                          fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
+                ),
             ],
           ),
           pw.SizedBox(width: 25),
@@ -133,20 +137,19 @@ class PdfHelper_generate {
     widgets.add(
       pw.SizedBox(height: 25),
     );
-    widgets.add(
-      pw.Container(
-        child: pw.Text("Your flight itinerary",
-            textAlign: pw.TextAlign.right,
-            style: pw.TextStyle(
-                fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
-      ),
-    );
+
+    widgets.add(pw.Container(
+      child: pw.Text("Your flight itinerary",
+          textAlign: pw.TextAlign.right,
+          style: pw.TextStyle(
+              fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
+    ));
     widgets.add(
       pw.SizedBox(height: 5),
     );
     widgets.add(
       pw.Container(
-        child: pw.Text("${mdlss.departure5} - ${mdlss.arrival6}",
+        child: pw.Text("${mdlss.departure} - ${mdlss.arrival}",
             textAlign: pw.TextAlign.right,
             style: pw.TextStyle(
                 fontSize: 10, font: ttfbold, color: PdfColors.blue400)),
@@ -164,32 +167,19 @@ class PdfHelper_generate {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Container(
-                child: pw.Text(mdlss.airlinename7,
+                child: pw.Text(mdlss.airlinename,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.flightnum8,
+                child: pw.Text(mdlss.flightnum,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
-              pw.Container(
-                child: pw.Text("Aircraft: ${mdlss.aircraft9}",
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(
-                        fontSize: 9, font: ttfbold, color: PdfColors.black)),
-              ),
-              pw.SizedBox(height: 2),
-              pw.Container(
-                child: pw.Text(mdlss.flightclass10,
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(
-                        fontSize: 9, font: ttfbold, color: PdfColors.black)),
-              ),
             ],
           ),
           pw.Container(width: 1, height: 80, color: PdfColors.grey),
@@ -197,28 +187,28 @@ class PdfHelper_generate {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Container(
-                child: pw.Text(mdlss.departure5,
+                child: pw.Text(mdlss.departure,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 10, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.departureterminal11,
+                child: pw.Text(mdlss.departureterminal,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.departuretime13,
+                child: pw.Text(mdlss.departuretime,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.departuredate15,
+                child: pw.Text(mdlss.departuredate,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
@@ -230,28 +220,28 @@ class PdfHelper_generate {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Container(
-                child: pw.Text(mdlss.arrival6,
+                child: pw.Text(mdlss.arrival,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 10, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.arrivalterminal12,
+                child: pw.Text(mdlss.arrivalterminal,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.arrivaltime14,
+                child: pw.Text(mdlss.arrivaltime,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
               ),
               pw.SizedBox(height: 2),
               pw.Container(
-                child: pw.Text(mdlss.arrivaldate16,
+                child: pw.Text(mdlss.arrivaldate,
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         fontSize: 9, font: ttfbold, color: PdfColors.black)),
@@ -267,24 +257,23 @@ class PdfHelper_generate {
     );
     widgets.add(
         pw.Container(height: 1, width: double.infinity, color: PdfColors.grey));
+
     widgets.add(
       pw.SizedBox(height: 30),
     );
 
-    widgets.add(
-      pw.Container(
-        child: pw.Text("Your trip receipt",
-            textAlign: pw.TextAlign.right,
-            style: pw.TextStyle(
-                fontSize: 12, font: ttfbold, color: PdfColors.green400)),
-      ),
-    );
+    widgets.add(pw.Container(
+      child: pw.Text("Your trip receipt",
+          textAlign: pw.TextAlign.right,
+          style: pw.TextStyle(
+              fontSize: 12, font: ttfbold, color: PdfColors.green400)),
+    ));
     widgets.add(
       pw.SizedBox(height: 5),
     );
     widgets.add(
       pw.Container(
-        child: pw.Text(mdlss.travellername2,
+        child: pw.Text(mdlss.selectedCustomer,
             textAlign: pw.TextAlign.center,
             style: pw.TextStyle(
                 fontSize: 10, font: ttfbold, color: PdfColors.green400)),
@@ -299,70 +288,49 @@ class PdfHelper_generate {
       pw.Container(
           margin: const pw.EdgeInsets.only(right: 170),
           child: pw.Column(children: [
-            pw.Row(
-                children: [
-                  pw.Text("    Air Fare",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(
-                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
-                  pw.Expanded(child: pw.SizedBox()),
-                  pw.Text("\$${mdlss.basefare}",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(
-                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
-                  pw.SizedBox(width: 50),
-                ]),
+            pw.Row(children: [
+              pw.Text("    Air Fare",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                      fontSize: 10, font: ttfbold, color: PdfColors.black)),
+              pw.Expanded(child: pw.SizedBox()),
+              pw.Text("\$${mdlss.basefare}",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                      fontSize: 10, font: ttfbold, color: PdfColors.black)),
+              pw.SizedBox(width: 50),
+            ]),
             pw.SizedBox(height: 2),
-            pw.Row(
-                children: [
-                  pw.Text("    Taxes, Surcharge & Fees",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(
-                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
-                  pw.Expanded(child: pw.SizedBox()),
-                  pw.Text("\$${mdlss.taxes}",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(
-                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
-                  pw.SizedBox(width: 50),
-                ]),
-            pw.SizedBox(height: 2),
-            pw.Row(
-                children: [
-                  pw.Text("    Due",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(
-                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
-                  pw.Expanded(child: pw.SizedBox()),
-                  pw.Text("\$${due}",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(
-                          fontSize: 10, font: ttfbold, color: PdfColors.black)),
-                  pw.SizedBox(width: 50),
-                ]),
+            pw.Row(children: [
+              pw.Text("    Due",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                      fontSize: 10, font: ttfbold, color: PdfColors.black)),
+              pw.Expanded(child: pw.SizedBox()),
+              pw.Text("\$${due}",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                      fontSize: 10, font: ttfbold, color: PdfColors.black)),
+              pw.SizedBox(width: 50),
+            ]),
             pw.SizedBox(height: 2),
             pw.Container(
               padding: pw.EdgeInsets.symmetric(vertical: 2),
               decoration: pw.BoxDecoration(
                   color: PdfColors.green400,
                   borderRadius: pw.BorderRadius.circular(3)),
-              child: pw.Row(
-                  children: [
-                    pw.Text("    Total",
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(
-                            fontSize: 10,
-                            font: ttfbold,
-                            color: PdfColors.white)),
-                    pw.Expanded(child: pw.SizedBox()),
-                    pw.Text("\$${mdlss.total}",
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(
-                            fontSize: 10,
-                            font: ttfbold,
-                            color: PdfColors.white)),
-                    pw.SizedBox(width: 50),
-                  ]),
+              child: pw.Row(children: [
+                pw.Text("    Total",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(
+                        fontSize: 10, font: ttfbold, color: PdfColors.white)),
+                pw.Expanded(child: pw.SizedBox()),
+                pw.Text("\$${mdlss.basefare}",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(
+                        fontSize: 10, font: ttfbold, color: PdfColors.white)),
+                pw.SizedBox(width: 50),
+              ]),
             )
           ])),
     );
@@ -370,7 +338,6 @@ class PdfHelper_generate {
       pw.SizedBox(height: 25),
     );
     pdf.addPage(pw.MultiPage(
-
       pageFormat: PdfPageFormat.a4,
       build: (context) => widgets,
     ));

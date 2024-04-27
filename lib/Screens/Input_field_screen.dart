@@ -24,8 +24,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
   List<customerModel> allcustomer = [];
   List<travellerModel> traveller = [];
   final _invoicenum1 = TextEditingController();
-  final _travellername2 = TextEditingController();
-  final _ticketnumber3 = TextEditingController();
   final _departure5 = TextEditingController();
   final _arrival6 = TextEditingController();
   final _airlinename7 = TextEditingController();
@@ -39,9 +37,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
   double _basefare17 = 0.0;
   final _due19 = TextEditingController();
   final _bsp = TextEditingController();
-
   customerModel? _selectedCustomer;
-  String? _travellerType;
   Future<void> _fetch() async {
     traveller.add(travellerModel(
         name: TextEditingController(),
@@ -145,8 +141,6 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
           });
           await FirebaseFirestore.instance.collection('invoice').add({
             'invoicenumber': _invoicenum1.text,
-            'traverllername': _travellername2.text,
-            'ticketnumber': _ticketnumber3.text,
             'departure': _departure5.text,'travellers': travellersData,
             'arrival': _arrival6.text,
             'airlinename': _airlinename7.text,
@@ -158,9 +152,9 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
             'departuredate': _departuredate15.text,
             'arrivaldate': _arrivaldate16.text,
             'basefare': _basefare17,
+            'selectedCustomerphone': _selectedCustomer!.phone.toString(),
             'selectedCustomerid': _selectedCustomer!.id.toString(),
             'selectedCustomer': _selectedCustomer!.name.toString(),
-            'travellerType': _travellerType.toString() ?? '',
           }).then((value) {
             decreaseDueAmount(_selectedCustomer!.id, _basefare17);
             Get.offNamed(invoiceList);

@@ -1,45 +1,39 @@
-class ModelObject {
-  double basefare, taxes, total;
-  String invoicenum1,
-      travellername2,
-      ticketnumber3,
-      pnr4,
-      customername,
-      customerid,
-      departure5,
-      arrival6,
-      airlinename7,
-      flightnum8,
-      aircraft9,
-      flightclass10,
-      departureterminal11,
-      arrivalterminal12,
-      departuretime13,
-      arrivaltime14,
-      departuredate15,
-      arrivaldate16;
+class InvoiceModel {
+  String invoicenumber;
+  String departure;
+  String arrival;
+  String airlinename;
+  String flightnum;
+  String departureterminal;
+  String arrivalterminal;
+  String departuretime;
+  String arrivaltime;
+  String departuredate;
+  String arrivaldate;
+  double basefare;
+  String selectedCustomerid;
+  String selectedCustomer;
+  String selectedCustomerphone;
+  String travellerType;
+  List<Map<String, dynamic>> travellers;
 
-  ModelObject({
-    required this.invoicenum1,
-    required this.aircraft9,
-    required this.airlinename7,
-    required this.arrival6,
-    required this.arrivaldate16,
-    required this.arrivalterminal12,
-    required this.customerid,
-    required this.customername,
-    required this.arrivaltime14,
+  InvoiceModel({
+    required this.invoicenumber,
+    required this.departure,
+    required this.arrival,
+    required this.airlinename,
+    required this.flightnum,
+    required this.departureterminal,
+    required this.arrivalterminal,
+    required this.departuretime,
+    required this.arrivaltime,
+    required this.departuredate,
+    required this.arrivaldate,
     required this.basefare,
-    required this.departure5,
-    required this.departuredate15,
-    required this.departureterminal11,
-    required this.departuretime13,
-    required this.flightclass10,
-    required this.flightnum8,
-    required this.pnr4,
-    required this.taxes,
-    required this.ticketnumber3,
-    required this.total,
-    required this.travellername2,
+    required this.selectedCustomerid,
+    required this.selectedCustomer,
+    required this.selectedCustomerphone,
+    required this.travellerType,
+    required this.travellers,
   });
 }
