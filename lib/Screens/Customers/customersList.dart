@@ -116,6 +116,7 @@ class _CustomerListState extends State<CustomerList> {
                             .collection('transactions')
                             .add({
                           'name': css.name,
+                          'phone': css.phone,
                           'id': css.id,
                           'amount': double.parse(
                               textEditingController.text.toString()),

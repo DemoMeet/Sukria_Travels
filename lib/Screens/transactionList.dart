@@ -18,20 +18,8 @@ class TransactionList extends StatefulWidget {
 }
 
 class _TransactionListState extends State<TransactionList> {
-  late TextEditingController _searchController;
-  var textEditingController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+  final TextEditingController searchController = TextEditingController();
+  String searchString = '';
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +33,41 @@ class _TransactionListState extends State<TransactionList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
-              child: const Text(
-                "Transactions",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: _width / 6, left: _width / 6),
+                  child: const Text(
+                    "Transactions",
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Container(
+                  width: 320,
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      labelText: 'Search by customer name or phone',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          searchController.clear();
+                          setState(() {
+                            searchString = '';
+                          });
+                        },
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchString = value.toLowerCase();
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 250,),
+              ],
             ),
             SizedBox(
               height: 20,
@@ -73,15 +90,21 @@ class _TransactionListState extends State<TransactionList> {
                   const List<DataColumn> columns = [
                     DataColumn(label: Text('ID')),
                     DataColumn(label: Text('Customer Name')),
+                    DataColumn(label: Text('Phone')),
                     DataColumn(label: Text('Amount')),
                     DataColumn(label: Text('Time')),
                   ];
 
-                  List<DataRow> rows = snapshot.data!.docs.map((document) {
-
+                  List<DataRow> rows = snapshot.data!.docs.where((document) {
+                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                    String customerName = data['name'].toString().toLowerCase();
+                    String customerPhone = data['phone'].toString().toLowerCase();
+                    return customerName.contains(searchString) || customerPhone.contains(searchString);
+                  }).map((document) {
                     return DataRow(cells: [
                       DataCell(Text(document["id"])),
                       DataCell(Text(document["name"])),
+                      DataCell(Text(document["phone"])),
                       DataCell(Text(document["amount"].toString())),
                       DataCell(Text(DateFormat('HH:mm yyyy-MM-dd').format(document["time"].toDate()))),
                     ]);

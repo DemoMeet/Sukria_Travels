@@ -50,7 +50,7 @@ class _InvoiceListState extends State<InvoiceList> {final TextEditingController 
                     "Flight Invoices Lists",
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
-                ),Container(width: 270,
+                ),Container(width: 320,
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
