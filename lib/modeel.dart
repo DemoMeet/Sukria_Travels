@@ -14,7 +14,6 @@ class InvoiceModel {
   String selectedCustomerid;
   String selectedCustomer;
   String selectedCustomerphone;
-  String travellerType;
   List<Map<String, dynamic>> travellers;
 
   InvoiceModel({
@@ -33,7 +32,6 @@ class InvoiceModel {
     required this.selectedCustomerid,
     required this.selectedCustomer,
     required this.selectedCustomerphone,
-    required this.travellerType,
     required this.travellers,
   });
 }

@@ -124,6 +124,26 @@ class PdfHelper_generate {
                 ),
             ],
           ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Container(
+                child: pw.Text("PNR",
+                    textAlign: pw.TextAlign.right,
+                    style: pw.TextStyle(
+                        fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
+              ),
+              pw.SizedBox(height: 10),
+              for (var traveller in mdlss.travellers)
+                pw.Container(
+                  child: pw.Text(
+                      traveller['pnr'],
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(
+                          fontSize: 12, font: ttfbold, color: PdfColors.blue400)),
+                ),
+            ],
+          ),
           pw.SizedBox(width: 25),
         ],
       ),

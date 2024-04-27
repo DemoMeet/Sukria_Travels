@@ -14,8 +14,9 @@ class InvoiceList extends StatefulWidget {
   State<InvoiceList> createState() => _InvoiceListState();
 }
 
-class _InvoiceListState extends State<InvoiceList> {final TextEditingController searchController = TextEditingController();
- String searchString = '';
+class _InvoiceListState extends State<InvoiceList> {
+  final TextEditingController searchController = TextEditingController();
+  String searchString = '';
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,9 @@ class _InvoiceListState extends State<InvoiceList> {final TextEditingController 
                     "Flight Invoices Lists",
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
-                ),Container(width: 320,
+                ),
+                Container(
+                  width: 320,
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
@@ -72,7 +75,9 @@ class _InvoiceListState extends State<InvoiceList> {final TextEditingController 
                     },
                   ),
                 ),
-                SizedBox(width: 100,),
+                SizedBox(
+                  width: 100,
+                ),
               ],
             ),
             const SizedBox(
@@ -104,15 +109,20 @@ class _InvoiceListState extends State<InvoiceList> {final TextEditingController 
                     DataColumn(label: Text('Action')),
                   ];
                   List<DataRow> rows = snapshot.data!.docs.where((document) {
-                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                    String customerName = data['selectedCustomer'].toString().toLowerCase();
-                    String customerPhone = data['selectedCustomerphone'].toString().toLowerCase();
-                    return customerName.contains(searchString) || customerPhone.contains(searchString);
-
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
+                    String customerName =
+                        data['selectedCustomer'].toString().toLowerCase();
+                    String customerPhone =
+                        data['selectedCustomerphone'].toString().toLowerCase();
+                    return customerName.contains(searchString) ||
+                        customerPhone.contains(searchString);
                   }).map((document) {
-                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
                     List<Map<String, dynamic>> travellersData =
-                    List<Map<String, dynamic>>.from(data['travellers'] ?? []);
+                        List<Map<String, dynamic>>.from(
+                            data['travellers'] ?? []);
                     return DataRow(cells: [
                       DataCell(Text(data['invoicenumber'].toString())),
                       DataCell(Text(data['selectedCustomer'].toString())),
@@ -140,10 +150,11 @@ class _InvoiceListState extends State<InvoiceList> {final TextEditingController 
                                 arrivaltime: data['arrivaltime'],
                                 departuredate: data['departuredate'],
                                 arrivaldate: data['arrivaldate'],
-                                basefare: data['basefare'],selectedCustomerphone: data['selectedCustomerphone'],
+                                basefare: data['basefare'],
+                                selectedCustomerphone:
+                                    data['selectedCustomerphone'],
                                 selectedCustomerid: data['selectedCustomerid'],
                                 selectedCustomer: data['selectedCustomer'],
-                                travellerType: data['travellerType'],
                                 travellers: travellersData,
                               );
                               PdfHelper_generate.generate(

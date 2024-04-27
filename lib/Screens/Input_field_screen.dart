@@ -41,7 +41,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
   Future<void> _fetch() async {
     traveller.add(travellerModel(
         name: TextEditingController(),
-        price: TextEditingController(),
+        price: TextEditingController(),pnr: TextEditingController(),
         ticketnumber: TextEditingController(),
         type: null));
     await FirebaseFirestore.instance
@@ -93,7 +93,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
     _addtoTraveller() {
       setState(() {
         traveller.add(travellerModel(
-            name: TextEditingController(),
+            name: TextEditingController(),pnr: TextEditingController(),
             price: TextEditingController(),
             ticketnumber: TextEditingController(),
             type: null));
@@ -136,6 +136,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
               'name': traveller.name.text,
               'ticketnumber': traveller.ticketnumber.text,
               'price': traveller.price.text,
+              'pnr': traveller.pnr.text,
             };
             travellersData.add(travellerMap);
           });
@@ -334,7 +335,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                 ),
                 Divider(),
                 Container(
-                  height: (215 * (traveller.length)).toDouble(),
+                  height: (313 * (traveller.length)).toDouble(),
                   child: MediaQuery.removePadding(
                     context: context,
                     removeTop: true,
@@ -550,6 +551,76 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                                         filled: true,
                                       ),
                                     ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin:
+                              EdgeInsets.only(top: 10, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: Text(
+                                      "${index + 1}. PNR",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: SizedBox(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: TextFormField(
+                                      controller: traveller[index].pnr,
+                                      decoration: InputDecoration(
+                                        enabledBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                        ),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          borderSide:
+                                          BorderSide(color: Colors.blue),
+                                        ),
+                                        hintText: "PNR",
+                                        fillColor: Colors.grey[200],
+                                        filled: true,
+                                      ),
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: SizedBox()
                                   )
                                 ],
                               ),
@@ -997,7 +1068,7 @@ class _InputFieldScreenState extends State<InputFieldScreen> {
                       Expanded(
                         flex: 10,
                         child: Text(
-                          "Base Fare",
+                          "Total Fare",
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
